@@ -28,9 +28,9 @@ const GlobalStyles = createGlobalStyle`
   body {
     font-family: Pretendard, sans-serif;
 
-    background: #ffffff;
+    background: ${theme.color.white};
 
-    /* color: ${theme.color.main}; */
+    color: ${theme.color.text.black};
 
     /* 볼드체, 이탤릭체 자동 생성 방지 */
     font-synthesis: none;

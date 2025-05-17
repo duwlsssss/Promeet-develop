@@ -87,3 +87,10 @@
     url('/assets/font/woff2/Pretendard-Black.woff2') format('woff2'),
     url('/assets/font/woff/Pretendard-Black.woff') format('woff');
 }
+
+/* Jalnan2 */
+@font-face {
+  font-family: Jalnan2;
+  font-style: normal;
+  src: url('/assets/font/otf/Jalnan2.otf') format('opentype');
+}
