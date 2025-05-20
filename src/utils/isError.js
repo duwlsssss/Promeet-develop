@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 export const isNetworkError = (error) => {
-  if (!error) return false;
+  if (!error) return;
 
   const message = error.message ?? '';
 
@@ -9,7 +9,7 @@ export const isNetworkError = (error) => {
 };
 
 export const isServerError = (error) => {
-  if (!error) return false;
+  if (!error) return;
 
   // axios 에러인지 확인
   if (axios.isAxiosError(error)) {

@@ -15,7 +15,7 @@ const ErrorFallback = ({ error: propsError }) => {
   const routeError = useRouteError(); // 라우터 내부에서만 동작
   const error = propsError ?? routeError;
 
-  console.error('[에러 발생]:', error.message ?? error);
+  console.error('[😡 에러 발생]', error.message ?? error);
 
   const handleRefresh = () => {
     // 리프레시해도 네트워크 오류 발생시

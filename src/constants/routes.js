@@ -1,6 +1,6 @@
 export const ROUTES = {
   HOME: '/',
-  SIGN_UP: '/sign-up',
+  SIGN_IN: '/sign-in',
 
   // 약속 생성 관련
   PROMISE_CREATE_INFO: '/promise/create/info', // 기본 정보 입력
@@ -22,4 +22,13 @@ export const ROUTES = {
   USER: 'user',
   ENTER_SCHEDULE: '/user/enter-schedule',
   NOT_FOUND: '*',
+};
+
+export const BUILD_ROUTES = {
+  PROMISE_JOIN: (id) => `/promise/${id}/join`,
+  PROMISE_LOCATION: (id) => `/promise/${id}/location`,
+  PROMISE_SCHEDULE: (id) => `/promise/${id}/schedule`,
+  PROMISE_RESULT: (id) => `/promise/${id}/result`,
+  PROMISE_CREATE_FINALIZE: (id) => `/promise/${id}/finalize`,
+  PROMISE_SUMMARY: (id) => `/promise/${id}/summary`,
 };
