@@ -11,7 +11,7 @@ export const MainContainer = styled.main`
   min-height: 100vh;
 
   /* 양 옆 패딩 */
-  padding: 0 30px;
+  padding: 0 var(--outlet-padding);
 
   /* Navibar에 안 가려지게 */
   padding-bottom: var(--nav-height);

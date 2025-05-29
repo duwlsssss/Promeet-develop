@@ -1,6 +1,7 @@
 import styled from 'styled-components';
-import { theme } from '@/styles/theme';
+// import { theme } from '@/styles/theme';
 
 export const Container = styled.section`
-  color: ${theme.color.point1};
+  width: 100%;
+  height: 100%;
 `;

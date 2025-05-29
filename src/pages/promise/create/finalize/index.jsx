@@ -1,8 +1,8 @@
-// import * as S from 'style';
-import MapContainer from '@/components/map/MapContainer';
+// import * as S from './style';
+import PlaceCategoryMap from '@/components/map/PlaceCategoryMap';
 
 const FinalizePage = () => {
-  return <MapContainer></MapContainer>;
+  return <PlaceCategoryMap />;
 };
 
 export default FinalizePage;

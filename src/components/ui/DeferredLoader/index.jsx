@@ -20,7 +20,7 @@ Loader.propTypes = {
 /**
  * DeferredLoader 컴포넌트
  *
- * @property {string} [text=''] - 로딩 상세 메시지
+ * @param {string} [text=''] - 로딩 상세 메시지
  */
 const DeferredLoader = ({ text = '' }) => {
   const [isDeferred, setIsDeferred] = useState(false);

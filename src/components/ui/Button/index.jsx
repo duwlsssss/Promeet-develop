@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 /**
  * Button 컴포넌트
  *
- * @property {string} text - 버튼 글자
+ * @param {string} text - 버튼 글자
  */
 
 const Button = ({ text }) => {
