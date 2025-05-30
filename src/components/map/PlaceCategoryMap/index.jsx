@@ -2,15 +2,16 @@ import * as S from './style';
 import Tabs from '@/components/ui/Tabs';
 import MapContainer from '@/components/map/MapContainer';
 import SearchPlace from '@/components/map/SearchPlace';
-import useTabsStore from '@/stores/ui/useTabsStore';
-import useMyLocationsStore from '@/stores/map/useMyLocationsStore';
+import { useTabsInfo } from '@/hooks/stores/ui/useTabsStore';
+import { useLocationInfo, useLocationActions } from '@/hooks/stores/promise/useLocationStore';
 import useHandleError from '@/hooks/useHandleError';
 import { CATEGORY, CATEGORY_LABEL } from '@/constants/place';
 import { MY_LOC_MARKER_ID } from '@/constants/map';
 
 const PlaceCategoryMap = () => {
-  const { selectedValue } = useTabsStore();
-  const { allowMyLocation, setMyLocation } = useMyLocationsStore();
+  const { selectedValue } = useTabsInfo();
+  const { allowMyLocation } = useLocationInfo();
+  const { setMyLocation } = useLocationActions();
 
   // 임시 사용자 좌표
   const schoolLat = 37.494705526855;

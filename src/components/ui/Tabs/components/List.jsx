@@ -1,6 +1,6 @@
 import { ListContainer } from '../style';
 import PropTypes from 'prop-types';
-import useTabsStore from '@/stores/ui/useTabsStore';
+import { useTabsInfo } from '@/hooks/stores/ui/useTabsStore';
 
 /**
  * List 컴포넌트
@@ -8,7 +8,7 @@ import useTabsStore from '@/stores/ui/useTabsStore';
  * @param {node} children - 리스트 구성 요소
  */
 const List = ({ children }) => {
-  const { option } = useTabsStore();
+  const { option } = useTabsInfo();
 
   return (
     <ListContainer role="tablist" aria-label={option} aria-orientation="horizontal">

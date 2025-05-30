@@ -3,17 +3,15 @@ import PropTypes from 'prop-types';
 import MarkerManager from '../MarkerManager';
 import PlaceCardList from '@/components/place/PlaceCardList';
 import BottomSheet from '@/components/ui/BottomSheet';
-import useMapStore from '@/stores/map/useMapStore';
-import useMyLocation from '@/stores/map/useMyLocationsStore';
-import useLocationStore from '@/stores/promise/useLocationsStore';
+import { useMapInfo } from '@/hooks/stores/map/useMapStore';
+import { useLocationInfo } from '@/hooks/stores/promise/useLocationStore';
 import useGetLikePlaces from '@/hooks/queries/useGetLikePlaces';
 import { CATEGORY, CATEGORY_LABEL } from '@/constants/place';
 import { DEFAULT_SUBWAY_STATION } from '@/constants/promise';
 
 const SearchPlace = ({ category }) => {
-  const { isKakaoLoaded } = useMapStore();
-  const { myLocation } = useMyLocation();
-  const { nearestSubwayStation } = useLocationStore();
+  const { isKakaoLoaded } = useMapInfo();
+  const { myLocation, nearestSubwayStation } = useLocationInfo();
   const [places, setPlaces] = useState([]);
   // 좋아요 정보 가져오기 위해 id들 저장
   const [placeIds, setPlaceIds] = useState([]);

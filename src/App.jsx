@@ -15,7 +15,7 @@ import Router from './routes/Router.jsx';
 import DeferredLoader from './components/ui/DeferredLoader';
 import ErrorFallback from './components/ui/ErrorFallback';
 import Toast from './components/ui/Toast';
-import useMapStore from '@/stores/map/useMapStore';
+import { useMapActions } from '@/hooks/stores/map/useMapStore';
 
 // 카카오맵 스크립트 로드 함수
 const loadKakaoMapScript = () => {
@@ -36,7 +36,7 @@ const loadKakaoMapScript = () => {
 
 function App() {
   const [isOpen, setIsOpen] = useState(false); // ReactQueryDevtoolsPanel 열고닫기
-  const { setIsKakaoLoaded } = useMapStore();
+  const { setIsKakaoLoaded } = useMapActions();
   const [isKakaoReady, setIsKakaoReady] = useState(false);
 
   useEffect(() => {

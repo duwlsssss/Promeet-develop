@@ -1,7 +1,7 @@
 import * as S from './style';
 import { useEffect } from 'react';
 import PropTypes from 'prop-types';
-import useTabsStore from '@/stores/ui/useTabsStore';
+import { useTabsActions } from '@/hooks/stores/ui/useTabsStore';
 import List from './components/List';
 import Trigger from './components/Trigger';
 import Panel from './components/Panel';
@@ -14,7 +14,7 @@ import Panel from './components/Panel';
  * @param {node} children - 탭 구성 요소
  */
 const Tabs = ({ option, defaultValue, children }) => {
-  const { setSelectedValue, setOption } = useTabsStore();
+  const { setSelectedValue, setOption } = useTabsActions();
 
   useEffect(() => {
     setSelectedValue(defaultValue);

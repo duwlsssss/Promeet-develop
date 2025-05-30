@@ -1,10 +1,10 @@
 import { useEffect } from 'react';
-import useLocationStore from '@/stores/promise/useLocationStore';
+import { useLocationActions } from '@/hooks/stores/promise/useLocationStore';
 
 const SubwayCategoryCode = 'SW8';
 
 const useNearestSubwayStation = (lat, lng) => {
-  const { setNearestSubwayStation } = useLocationStore();
+  const { setNearestSubwayStation } = useLocationActions();
 
   useEffect(() => {
     if (!window.kakao || !window.kakao.maps || !lat || !lng) return;
@@ -19,12 +19,13 @@ const useNearestSubwayStation = (lat, lng) => {
           // 가장 가까운 역
           const nearestStation = data[0];
           setNearestSubwayStation({
+            id: nearestStation.id,
             name: nearestStation.place_name,
             position: {
               lat: nearestStation.y,
               lng: nearestStation.x,
             },
-            id: nearestStation.id,
+            address: nearestStation.address,
             distance: nearestStation.distance,
           });
         }

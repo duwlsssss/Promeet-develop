@@ -1,10 +1,10 @@
 import * as S from './style';
 import { createPortal } from 'react-dom';
 import { AnimatePresence } from 'framer-motion';
-import useToastStore from '@/stores/ui/useToastStore';
+import { useToastInfo } from '@/hooks/stores/ui/useToastStore';
 
 const Toast = () => {
-  const { isOpen, message, isFadingOut } = useToastStore();
+  const { isOpen, message, isFadingOut } = useToastInfo();
 
   if (!isOpen) return null;
 

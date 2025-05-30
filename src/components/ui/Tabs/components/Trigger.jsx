@@ -1,6 +1,6 @@
 import { TriggerBtn } from '../style';
 import PropTypes from 'prop-types';
-import useTabsStore from '@/stores/ui/useTabsStore';
+import { useTabsInfo, useTabsActions } from '@/hooks/stores/ui/useTabsStore';
 import matchIcon from '@/utils/matchIcon.jsx';
 
 /**
@@ -11,7 +11,8 @@ import matchIcon from '@/utils/matchIcon.jsx';
  * @param {function} [onClick] - 탭 클릭 시 실행될 콜백 함수
  */
 const Trigger = ({ value, label, onClick }) => {
-  const { selectedValue, setSelectedValue, option } = useTabsStore();
+  const { selectedValue, option } = useTabsInfo();
+  const { setSelectedValue } = useTabsActions();
   const isActive = selectedValue === value;
 
   const onSelect = () => {

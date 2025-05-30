@@ -1,6 +1,6 @@
 import { PanelContainer } from '../style';
 import PropTypes from 'prop-types';
-import useTabsStore from '@/stores/ui/useTabsStore';
+import { useTabsInfo } from '@/hooks/stores/ui/useTabsStore';
 
 /**
  * Panel 컴포넌트
@@ -9,7 +9,7 @@ import useTabsStore from '@/stores/ui/useTabsStore';
  * @param {node} children - 패널의 구성 요소
  */
 const Panel = ({ value, children }) => {
-  const { selectedValue, option } = useTabsStore();
+  const { selectedValue, option } = useTabsInfo();
 
   if (value !== selectedValue) return;
 

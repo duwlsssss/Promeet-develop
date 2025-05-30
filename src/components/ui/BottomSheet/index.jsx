@@ -1,7 +1,7 @@
 import * as S from './style';
 import PropTypes from 'prop-types';
 import { AnimatePresence, useDragControls, useMotionValue } from 'framer-motion';
-import useBottomSheetStore from '@/stores/ui/useBottomSheetStore';
+import { useBottomSheetInfo, useBottomSheetActions } from '@/hooks/stores/ui/useBottomSheetStore';
 
 const bottomSheetVariants = {
   opened: { top: 'var(--place-category-tab-height)' },
@@ -18,7 +18,8 @@ const deltaThreshold = 5;
  * @param {node} children - 구성 요소
  */
 const BottomSheet = ({ id, children }) => {
-  const { activeBottomSheet, setActiveBottomSheet } = useBottomSheetStore();
+  const { activeBottomSheet } = useBottomSheetInfo();
+  const { setActiveBottomSheet } = useBottomSheetActions();
 
   // 드래그 상태 관리
   const dragY = useMotionValue(0);
