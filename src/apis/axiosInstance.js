@@ -3,6 +3,9 @@ import { ROUTES } from '@/constants/routes';
 
 const axiosInstance = axios.create({
   baseURL: import.meta.env.VITE_SERVER_API_URL,
+  headers: {
+    'Content-Type': 'application/json',
+  },
 });
 
 // 응답 인터셉터

@@ -1,4 +1,6 @@
+import * as S from './style';
+
 const Navbar = () => {
-  return <div>nav</div>;
+  return <S.Navbar>nav</S.Navbar>;
 };
 export default Navbar;

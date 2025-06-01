@@ -8,8 +8,14 @@ const mapStore = create()(
       map: null,
       isKakaoLoaded: false,
       actions: {
-        setMap: (map) => set(() => ({ map }), false, 'setMap'),
-        setIsKakaoLoaded: (flag) => set(() => ({ isKakaoLoaded: flag }), false, 'setIsKakaoLoaded'),
+        setMap: (map) =>
+          set((state) => {
+            state.map = map;
+          }),
+        setIsKakaoLoaded: (flag) =>
+          set((state) => {
+            state.isKakaoLoaded = flag;
+          }),
       },
     })),
   ),

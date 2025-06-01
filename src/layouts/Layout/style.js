@@ -7,12 +7,18 @@ export const MainContainer = styled.main`
   /* y축 스크롤만 허용 */
   overflow-x: hidden;
 
+  /* 자식 요소들이 부모 높이를 상속받도록 */
+
+  display: flex;
+  flex-direction: column;
+
   /* 전체 높이 확보 */
   min-height: 100vh;
 
   /* 양 옆 패딩 */
   padding: 0 var(--outlet-padding);
 
-  /* Navibar에 안 가려지게 */
-  padding-bottom: var(--nav-height);
+  & > * {
+    flex: 1;
+  }
 `;

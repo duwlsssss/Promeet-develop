@@ -7,8 +7,14 @@ const markerStore = create()(
     immer((set) => ({
       activeMarkerId: null,
       actions: {
-        setActiveMarkerId: (markerId) => set({ activeMarkerId: markerId }),
-        clearActiveMarkerId: () => set({ activeMarkerId: null }),
+        setActiveMarkerId: (markerId) =>
+          set((state) => {
+            state.activeMarkerId = markerId;
+          }),
+        clearActiveMarkerId: () =>
+          set((state) => {
+            state.activeMarkerId = null;
+          }),
       },
     })),
   ),

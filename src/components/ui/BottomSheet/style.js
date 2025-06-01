@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
 import { theme } from '@/styles/theme';
-import LineSVG from '@/assets/img/horizontal_line.svg?react';
+import LineSVG from '@/assets/img/icon/horizontal_line.svg?react';
 
 export const BottomSheet = styled(motion.div)`
   position: absolute;

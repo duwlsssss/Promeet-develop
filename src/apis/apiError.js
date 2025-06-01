@@ -7,7 +7,7 @@ export default class ApiError extends Error {
     this.data = data;
     this.originalError = originalError;
     this.timestamp = new Date().toISOString();
-    this.stack = originalError?.stack || this.stack;
+    this.stack = originalError?.stack ?? this.stack;
   }
 
   toString() {
