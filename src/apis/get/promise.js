@@ -7,3 +7,11 @@ export const getPlaceLike = async (promiseId, placeId, userId) => {
   });
   return data;
 };
+
+// 약속 정보 가져오기
+export const getPromiseData = async (promiseId, userId) => {
+  const { data } = await axiosInstance.get(`/promises/${promiseId}`, {
+    params: { userId },
+  });
+  return data;
+};

@@ -5,6 +5,7 @@ import EmptyHeartSvg from '@/assets/img/icon/empty_heart.svg?react';
 import FilledHeartSvg from '@/assets/img/icon/filled_heart.svg?react';
 
 export const PlaceCard = styled(motion.div)`
+  padding: 15px;
   border: 4px solid ${({ $isSelected }) => ($isSelected ? theme.color.main : 'transparent')};
   border-radius: 15px;
   box-shadow: 0 3px 8px 0 rgb(0, 0, 0, 25%);

@@ -4,8 +4,10 @@ import { theme } from '@/styles/theme';
 export const Header = styled.header`
   display: flex;
   align-items: center;
+  justify-content: center;
+
   width: 100%;
-  padding: 20px 0;
+  height: var(--header-height);
 `;
 
 export const Text = styled.h1`

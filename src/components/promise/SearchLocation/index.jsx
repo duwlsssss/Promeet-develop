@@ -3,6 +3,7 @@ import { useEffect, useState, useCallback, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { useNavigate } from 'react-router-dom';
 import Header from '../Header';
+import Input from '@/components/ui/Input';
 import PlaceCardList from '@/components/promise/place/PlaceCardList';
 import { useMapInfo } from '@/hooks/stores/promise/map/useMapStore';
 import { useLocationInfo, useLocationActions } from '@/hooks/stores/promise/useLocationStore';
@@ -113,7 +114,7 @@ const SearchLocation = ({ onBack }) => {
         backwardType="arrow"
         onBackwardClick={onBack}
       />
-      <input
+      <Input
         value={searchInput}
         onChange={(e) => setSearchInput(e.target.value)}
         placeholder="주소를 입력해주세요"

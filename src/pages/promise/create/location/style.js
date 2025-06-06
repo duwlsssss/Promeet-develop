@@ -5,7 +5,12 @@ import { theme } from '@/styles/theme';
 export const Container = styled.section`
   display: flex;
   flex-direction: column;
-  gap: 10px;
+`;
+
+export const LocationWrapper = styled.section`
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 `;
 
 export const FixedPlaceText = styled.p`

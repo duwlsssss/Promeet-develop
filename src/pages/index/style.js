@@ -6,13 +6,14 @@ import LogoSvg from '@/assets/img/logo.svg?react';
 export const EnterContainer = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 300px;
+  gap: 400px;
   align-items: center;
   justify-content: center;
 
   /* 전체 화면 채우기 트릭 */
   width: 100vw;
   margin-left: calc(0px - var(--outlet-padding));
+  padding: 0 var(--outlet-padding);
 
   background-color: #c6ebe5;
 `;

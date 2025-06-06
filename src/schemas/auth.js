@@ -5,12 +5,12 @@ export const signInSchema = z.object({
   name: z
     .string()
     .trim()
-    .min(1, { message: '닉네임을 입력해주세요' })
+    .min(1, { message: '이름을 입력해주세요' })
     .max(NICKNAME_MAX_LENGTH, {
-      message: `닉네임은 ${NICKNAME_MAX_LENGTH}자 이하로 입력해주세요`,
+      message: `이름은 ${NICKNAME_MAX_LENGTH}자 이하로 입력해주세요`,
     })
     .refine((value) => /^[a-zA-Z0-9가-힣._-]+$/.test(value), {
-      message: '영문, 한글, 숫자, . _ - 만 사용 가능해요',
+      message: '영문, 한글 단어, 숫자, . _ - 만 사용 가능해요',
     }),
   password: z
     .string()
@@ -21,6 +21,6 @@ export const signInSchema = z.object({
       message: `비밀번호는 ${PASSWORD_MAX_LENGTH}자 이하로 입력해주세요`,
     })
     .refine((value) => /^[a-zA-Z0-9]+$/.test(value), {
-      message: '비밀번호는 영문과 숫자만 사용 가능해요',
+      message: '영문과 숫자만 사용 가능해요',
     }),
 });

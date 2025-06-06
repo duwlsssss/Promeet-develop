@@ -56,9 +56,7 @@ const ErrorFallback = ({ error: propsError }) => {
             <ErrorMessage icon={S.WarningIcon} message="알 수 없는 에러가 발생했어요." />
           )}
         </S.ErrorInfo>
-        <Button color="primary500" size="xsmall" width="143px" onClick={handleRefresh}>
-          새로고침
-        </Button>
+        <Button onClick={handleRefresh}>다시 시도</Button>
       </S.ErrorContainer>
     </>
   );
