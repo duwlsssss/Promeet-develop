@@ -4,8 +4,8 @@ import { theme } from '@/styles/theme';
 import LineSVG from '@/assets/img/icon/horizontal_line.svg?react';
 
 export const BottomSheet = styled(motion.div)`
-  position: absolute;
-  z-index: 3;
+  position: fixed;
+  z-index: 2;
 
   display: flex;
   flex-direction: column;
@@ -16,7 +16,7 @@ export const BottomSheet = styled(motion.div)`
   border-radius: 10px 10px 0 0;
 
   background: ${theme.color.white};
-  filter: drop-shadow(0 0 30px rgb(0, 0, 0, 30%));
+  filter: drop-shadow(0 0 20px rgb(0, 0, 0, 30%));
 `;
 
 export const BottomSheetHeader = styled.div`

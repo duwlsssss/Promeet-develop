@@ -25,11 +25,11 @@ export const ListContainer = styled.header`
   gap: 16px;
 
   /* 가로 스크롤 */
-  width: calc(100vw + var(--outlet-padding));
+  width: calc(100vw + 2 * var(--outlet-padding));
 
   /* 전체 너비 채우기 */
   margin-left: calc(0px - var(--outlet-padding));
-  padding: 3px var(--outlet-padding) 5px;
+  padding: 3px calc(2 * var(--outlet-padding)) 10px;
 
   -ms-overflow-style: none; /* IE 10+ */
   &::-webkit-scrollbar {
@@ -45,6 +45,8 @@ export const PanelContainer = styled.section`
 `;
 
 export const TriggerBtn = styled.button`
+  cursor: pointer;
+
   display: flex;
   gap: 6px;
   align-items: center;

@@ -1,6 +1,6 @@
 import * as S from './style';
 import { useState } from 'react';
-import FinalPlaceMap from '@/components/map/FinalPlaceMap';
+import FinalPlaceMap from '@/components/promise/map/FinalPlaceMap';
 
 const SummaryPage = () => {
   const [isOpenMap, setIsOpenMap] = useState(false);

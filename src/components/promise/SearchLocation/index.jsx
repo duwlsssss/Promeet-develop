@@ -3,8 +3,8 @@ import { useEffect, useState, useCallback, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { useNavigate } from 'react-router-dom';
 import Header from '../Header';
-import PlaceCardList from '@/components/place/PlaceCardList';
-import { useMapInfo } from '@/hooks/stores/map/useMapStore';
+import PlaceCardList from '@/components/promise/place/PlaceCardList';
+import { useMapInfo } from '@/hooks/stores/promise/map/useMapStore';
 import { useLocationInfo, useLocationActions } from '@/hooks/stores/promise/useLocationStore';
 import { ROUTES } from '@/constants/routes';
 import { PROMISE_LOCATION_HEADER_TEXT } from '@/constants/promise';
@@ -34,6 +34,11 @@ const SearchLocation = ({ onBack }) => {
           async (position) => {
             const { latitude, longitude } = position.coords;
             const latlng = new window.kakao.maps.LatLng(latitude, longitude);
+            // 내 위치 저장 - 마커에서 사용
+            setMyLocation({
+              position: { La: latitude, Ma: longitude },
+              placeId: MY_LOC_MARKER_ID,
+            });
 
             // 좌표 -> 주소
             const geocoder = new window.kakao.maps.services.Geocoder();
@@ -42,12 +47,7 @@ const SearchLocation = ({ onBack }) => {
                 const address = result[0].road_address
                   ? result[0].road_address.address_name
                   : result[0].address.address_name;
-                setMyLocation({
-                  position: { La: latitude, Ma: longitude },
-                  id: MY_LOC_MARKER_ID,
-                  address,
-                });
-                setLocation(address);
+                setLocation(address); // 주소 문자열 저장
               }
             });
           },
@@ -76,13 +76,13 @@ const SearchLocation = ({ onBack }) => {
     if (status === window.kakao.maps.services.Status.OK) {
       const places = data.map((place) => ({
         // 위치 정보 저장
-        id: place.id,
+        placeId: place.id,
         name: place.place_name,
         address: place.road_address_name ?? place.address_name,
         position: new window.kakao.maps.LatLng(place.y, place.x),
       }));
       setPlaces(places);
-      console.log('places', places);
+      // console.log('places', places);
     } else if (status === window.kakao.maps.services.Status.ZERO_RESULT) {
       setPlaces([]);
     } else if (status === window.kakao.maps.services.Status.ERROR) {

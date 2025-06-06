@@ -13,6 +13,7 @@ const userStore = create()(
           create: [],
           join: [],
         },
+        userType: '', // 'create' | 'join' | 'member'
         actions: {
           setUserId: (userId) =>
             set((state) => {
@@ -29,6 +30,10 @@ const userStore = create()(
           setPromises: (promises) =>
             set((state) => {
               state.promises = promises;
+            }),
+          setUserType: (userType) =>
+            set((state) => {
+              state.userType = userType;
             }),
           clearUser: () =>
             set((state) => {

@@ -7,7 +7,7 @@ export const ROUTES = {
   PROMISE_CREATE_DATE: '/promise/create/date', // 날짜 선택
   PROMISE_CREATE_LOCATION: '/promise/create/location', // 주최자의 위치 입력
   PROMISE_CREATE_SCHEDULE: '/promise/create/schedule', // 주최자의 시간대 입력
-  PROMISE_CREATE_FINALIZE: '/promise/:promiseId/finalize', // 약속 확정
+  PROMISE_FINALIZE: '/promise/:promiseId/finalize', // 약속 확정
 
   // 공유 링크를 통해 접근하는 약속 참여 관련
   PROMISE_JOIN: '/promise/:promiseId/join', // 참여자 회원가입/이름 등록
@@ -29,6 +29,6 @@ export const BUILD_ROUTES = {
   PROMISE_LOCATION: (id) => `/promise/${id}/location`,
   PROMISE_SCHEDULE: (id) => `/promise/${id}/schedule`,
   PROMISE_RESULT: (id) => `/promise/${id}/result`,
-  PROMISE_CREATE_FINALIZE: (id) => `/promise/${id}/finalize`,
+  PROMISE_FINALIZE: (id) => `/promise/${id}/finalize`,
   PROMISE_SUMMARY: (id) => `/promise/${id}/summary`,
 };

@@ -2,14 +2,7 @@ import * as S from './style';
 import PropTypes from 'prop-types';
 import { AnimatePresence, useDragControls, useMotionValue } from 'framer-motion';
 import { useBottomSheetInfo, useBottomSheetActions } from '@/hooks/stores/ui/useBottomSheetStore';
-
-const bottomSheetVariants = {
-  opened: { top: 'var(--place-category-tab-height)' },
-  closed: { top: `calc(100% - var(--bs-header-height))` },
-};
-
-const offsetThreshold = 100;
-const deltaThreshold = 5;
+import { MAP_BS_ID } from '@/constants/map';
 
 /**
  * BottomSheet 컴포넌트
@@ -18,6 +11,19 @@ const deltaThreshold = 5;
  * @param {node} children - 구성 요소
  */
 const BottomSheet = ({ id, children }) => {
+  const isMapBS = id === MAP_BS_ID;
+  const bottomSheetVariants = {
+    opened: { top: 'var(--place-category-tab-height)' },
+    closed: {
+      top: isMapBS
+        ? `calc(100% - var(--bs-header-height) - var(--next-btn-container-height))`
+        : `calc(100% - var(--bs-header-height)`,
+    },
+  };
+
+  const offsetThreshold = 100;
+  const deltaThreshold = 5;
+
   const { activeBottomSheet } = useBottomSheetInfo();
   const { setActiveBottomSheet } = useBottomSheetActions();
 

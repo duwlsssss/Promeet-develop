@@ -4,6 +4,6 @@ export const LOCAL_STORAGE_KEY = {
 };
 
 export const QUERY_KEY = {
-  places: 'places',
   user: 'user',
+  promise: 'promise',
 };

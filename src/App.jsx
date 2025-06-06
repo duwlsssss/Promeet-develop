@@ -15,7 +15,7 @@ import Router from './routes/Router.jsx';
 import DeferredLoader from './components/ui/DeferredLoader';
 import ErrorFallback from './components/ui/ErrorFallback';
 import Toast from './components/ui/Toast';
-import { useMapActions } from '@/hooks/stores/map/useMapStore';
+import { useMapActions } from '@/hooks/stores/promise/map/useMapStore';
 
 // 카카오맵 스크립트 로드 함수
 const loadKakaoMapScript = () => {

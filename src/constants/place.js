@@ -18,3 +18,5 @@ export const CATEGORY_MARKER_IMAGE = {
   [CATEGORY.STUDY_CAFE]: '/assets/img/marker/study_cafe_marker.svg',
   [CATEGORY.ACTIVITY]: '/assets/img/marker/activity_marker.svg',
 };
+
+export const STATION_MARKER_IMAGE = '/assets/img/marker/station_marker.svg';

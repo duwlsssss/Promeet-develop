@@ -1,64 +1,113 @@
 import { useMutation } from '@tanstack/react-query';
-import { postLike } from '@/apis/post/place';
-import { deleteLike } from '@/apis/delete/place';
+import { postPlaceLike } from '@/apis/post/promise';
+import { deletePlaceLike } from '@/apis/delete/promise';
 import useHandleError from '../useHandleError';
 import queryClient from '@/lib/tanstack-query/queryClient';
 import { QUERY_KEY } from '@/constants/key';
+import { useUserInfo } from '@/hooks/stores/auth/useUserStore';
+import {
+  usePromiseDataInfo,
+  usePromiseDataActions,
+} from '@/hooks/stores/promise/usePromiseDataStore';
 
 const useToggleLikePlace = () => {
   const handleError = useHandleError();
-  // 내 정보
-  // const { myInfo } = useUserStore();
-  // const myUserId = myInfo?.id;
-  const myUserId = '0000'; // 임시 유저 정보
+  const { userId } = useUserInfo();
+  const { likedPlaces } = usePromiseDataInfo();
+  const { setLikedPlaces } = usePromiseDataActions();
 
   return useMutation({
-    mutationFn: ({ placeId, isLiked }) => (isLiked ? deleteLike(placeId) : postLike(placeId)),
-    onMutate: async ({ placeId, isLiked }) => {
-      // 1. 장소에 관련된 쿼리를 취소 (캐시된 데이터를 새로 불러오는 요청)
+    mutationFn: ({ promiseId, place, isLiked }) => {
+      isLiked
+        ? deletePlaceLike(promiseId, place.placeId, userId)
+        : postPlaceLike({
+            promiseId,
+            place,
+            userId,
+          });
+    },
+    onMutate: async ({ place, promiseId, isLiked }) => {
+      // 1. 장소에 관련된 쿼리를 취소
       await queryClient.cancelQueries({
-        queryKey: [QUERY_KEY.places, placeId],
+        queryKey: [QUERY_KEY.promise, promiseId],
       });
 
-      // 2. 현재 장소 관련 데이터를 캐시에서 가져오기
-      const prevData = queryClient.getQueryData([QUERY_KEY.places, placeId]);
+      // 2. 현재 좋아요 상태 저장
+      const prevLikedPlaces = likedPlaces;
 
-      if (!prevData || !myUserId) return { prevData };
+      // 3. 낙관적 업데이트
+      let finalLikedPlaces;
 
-      // 3. 좋아요 정보 저장
-      queryClient.setQueryData([QUERY_KEY.places, placeId], (old) => {
-        if (!old) return old;
+      if (isLiked) {
+        // 좋아요 취소
+        finalLikedPlaces = prevLikedPlaces
+          .map((likedPlace) => {
+            if (likedPlace.place.placeId === place.placeId) {
+              const uniqueUserIds = [...new Set(likedPlace.userIds)].filter((id) => id !== userId);
+              return {
+                ...likedPlace,
+                userIds: uniqueUserIds,
+                likesCount: uniqueUserIds.length,
+              };
+            }
+            return likedPlace;
+          })
+          .filter((likedPlace) => likedPlace.likesCount > 0); // likesCount가 0이면 제거
+      } else {
+        // 좋아요 추가
+        // 장소가 이전 좋아요 배열에 있는지
+        const existingPlace = prevLikedPlaces.find((p) => p.place.placeId === place.placeId);
 
-        // 취소면 나를 좋아요 목록에서 제거, 누르는 거면 내 id 추가
-        const updatedLikes = isLiked
-          ? old.data.likes.filter((userId) => userId !== myUserId)
-          : [...old.data.likes, myUserId];
+        // 있으면 userIds, likesCount만 업데이트
+        if (existingPlace) {
+          finalLikedPlaces = prevLikedPlaces.map((likedPlace) => {
+            if (likedPlace.place.placeId === place.placeId) {
+              const uniqueUserIds = [...new Set([...likedPlace.userIds, userId])];
+              return {
+                ...likedPlace,
+                userIds: uniqueUserIds,
+                likesCount: uniqueUserIds.length,
+              };
+            }
+            return likedPlace;
+          });
+        } else {
+          // 없으면 장소 정보도 추가
+          finalLikedPlaces = [
+            ...prevLikedPlaces,
+            {
+              userIds: [userId],
+              likesCount: 1,
+              place: {
+                placeId: place.placeId,
+                type: place.type,
+                name: place.name,
+                position: place.position,
+                address: place.address,
+                phone: place.phone,
+                link: place.link,
+              },
+            },
+          ];
+        }
+      }
 
-        return {
-          ...old,
-          data: {
-            ...old.data,
-            likes: updatedLikes,
-          },
-        };
-      });
-
-      return { prevData };
+      setLikedPlaces(finalLikedPlaces);
+      return { prevLikedPlaces }; // 요청 실패시 되돌리기용
     },
 
     // 요청 실패시 롤백
-    onError: (error, { placeId }, context) => {
-      if (context?.prevData) {
-        queryClient.setQueryData([QUERY_KEY.places, placeId], context.prevData);
+    onError: (error, _, context) => {
+      if (context?.prevLikedPlaces) {
+        setLikedPlaces(context.prevLikedPlaces);
       }
       handleError(error);
     },
 
-    // 서버의 실제 최신 데이터를 다시 가져옴
-    onSettled: async (_, __, { placeId }) => {
-      await queryClient.invalidateQueries({
-        queryKey: [QUERY_KEY.places, placeId],
-        exact: true,
+    // 실제 서버의 최신 데이터를 다시 가져옴
+    onSettled: (_, __, { promiseId }) => {
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEY.promise, promiseId],
       });
     },
   });

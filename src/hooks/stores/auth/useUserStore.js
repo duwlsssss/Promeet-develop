@@ -8,6 +8,7 @@ export const useUserInfo = () =>
       userName: state.userName,
       fixedSchedules: state.fixedSchedules,
       promises: state.promises,
+      userType: state.userType,
     })),
   );
 
