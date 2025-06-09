@@ -7,11 +7,15 @@ import { useLocationInfo, useLocationActions } from '@/hooks/stores/promise/useL
 import useHandleError from '@/hooks/useHandleError';
 import { CATEGORY, CATEGORY_LABEL } from '@/constants/place';
 import { MY_LOC_MARKER_ID } from '@/constants/map';
+import { useState } from 'react';
+import LocationAgreementModal from '@/components/modal/LocationAgreementModal';
 
 const PlaceCategoryMap = () => {
   const { selectedValue } = useTabsInfo();
   const { allowMyLocation } = useLocationInfo();
   const { setMyLocation } = useLocationActions();
+  const [isLocationModalOpen, setIsLocationModalOpen] = useState(false);
+
   // 임시 사용자 좌표
   const schoolLat = 37.494705526855;
   const schoolLng = 126.95994559383;
@@ -20,7 +24,7 @@ const PlaceCategoryMap = () => {
 
   const handleMyLocationClick = () => {
     // 위치 동의 모달 띄우기
-    if (!allowMyLocation) alert('위치 동의 필요');
+    if (!allowMyLocation) setIsLocationModalOpen(true);
     else {
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
@@ -52,6 +56,11 @@ const PlaceCategoryMap = () => {
         </Tabs>
       </S.TabsWrapper>
       <S.MyLocationIcon onClick={handleMyLocationClick} />
+      {/* 위치 동의 모달 */}
+      <LocationAgreementModal
+        isOpen={isLocationModalOpen}
+        onClose={() => setIsLocationModalOpen(false)}
+      />
     </>
   );
 };

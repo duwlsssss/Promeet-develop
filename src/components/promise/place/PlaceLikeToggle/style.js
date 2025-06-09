@@ -28,6 +28,7 @@ export const ToggleOption = styled.div`
   flex: 1;
   align-items: center;
   justify-content: center;
+
   font-weight: 700;
   color: ${theme.color.text.grey};
 `;

@@ -8,14 +8,14 @@ export const CalendarWrapper = styled.div`
 
   background: #ffffff;
   box-shadow: 0 4px 8px rgb(0, 0, 0, 35%);
-
+  /* stylelint-disable selector-class-pattern */
   .react-calendar {
     width: 100%;
     border: none;
     font-family: inherit;
     background: transparent;
   }
-  /* stylelint-disable selector-class-pattern */
+
   .react-calendar__navigation {
     display: flex;
     justify-content: space-between;
@@ -40,11 +40,10 @@ export const CalendarWrapper = styled.div`
     height: 44px;
   }
 
-  /* stylelint-enable selector-class-pattern */
   abbr[title] {
     text-decoration: none;
   }
-  /* stylelint-disable selector-class-pattern */
+
   .react-calendar__month-view__weekdays {
     font-size: 13px;
     font-weight: 500;
@@ -83,7 +82,7 @@ export const CalendarWrapper = styled.div`
   .react-calendar__tile:hover {
     background: #40b59f33 !important;
   }
-  /* stylelint-enable selector-class-pattern */
+
   .past-day {
     pointer-events: none;
     cursor: default;
@@ -97,7 +96,7 @@ export const CalendarWrapper = styled.div`
   .not-this-month {
     color: #848a94 !important;
   }
-  /* stylelint-disable selector-class-pattern */
+
   .custom-drag-range,
   .react-calendar__tile--range {
     color: #002055;
@@ -164,7 +163,7 @@ export const CalendarWrapper = styled.div`
 
     background-color: #40b59f;
   }
-  /* stylelint-enable selector-class-pattern */
+
   .single-day::before {
     content: '';
 
@@ -192,4 +191,19 @@ export const CalendarWrapper = styled.div`
 
     background-color: #40b59f;
   }
+  /* stylelint-enable selector-class-pattern */
+`;
+
+export const TileOverlay = styled.div`
+  cursor: pointer;
+
+  position: absolute;
+  z-index: 5;
+  top: 0;
+  left: 0;
+
+  width: 100%;
+  height: 100%;
+
+  background-color: transparent;
 `;

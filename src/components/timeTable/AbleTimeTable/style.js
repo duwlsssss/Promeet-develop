@@ -1,4 +1,3 @@
-// filepath: [style.js](http://_vscodecontentref_/0)
 import styled, { css } from 'styled-components';
 
 export const CELL_SIZE = 40;
@@ -53,7 +52,8 @@ export const Quarter = styled.div`
 
   width: 100%;
 
-  background: ${({ selected }) => (selected ? 'rgba(195, 233, 224, 0.80)' : '#fff')};
+  background: ${({ selected, $isFixed }) =>
+    selected ? 'rgba(195, 233, 224, 0.80)' : $isFixed ? '#949494' : '#fff'};
 
   &:active {
     background: rgb(195, 233, 224, 80%);
@@ -61,15 +61,16 @@ export const Quarter = styled.div`
 `;
 
 export const HeaderCell = styled(Cell)`
-  background: #ffffff;
-
   cursor: default;
 
-  color: #6b7a99;
   font-family: Pretendard, sans-serif;
-  font-style: normal;
-  font-weight: 600;
   font-size: 10px;
+  font-weight: 600;
+  font-style: normal;
+  color: #6b7a99;
+  text-align: center;
+
+  background: #ffffff;
   ${({ $noTop }) =>
     $noTop &&
     css`

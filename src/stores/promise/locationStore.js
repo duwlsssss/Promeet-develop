@@ -7,7 +7,7 @@ const locationStore = create()(
     immer((set) => ({
       location: null,
       nearestSubwayStation: null,
-      allowMyLocation: true, // 임시 설정
+      allowMyLocation: false, // 임시 설정
       myLocation: null,
       actions: {
         setLocation: (value) =>

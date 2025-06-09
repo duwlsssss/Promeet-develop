@@ -8,6 +8,7 @@ export const TableWrapper = styled.div`
 
   display: inline-block;
 
+  width: 320px;
   border: none;
   border-radius: 8px;
 
@@ -44,10 +45,79 @@ export const Cell = styled.div`
   }
 `;
 
-export const Quarter = styled.div`
+export const ButtonGroup = styled.div`
+  position: absolute;
+  z-index: 1;
+  top: -100%;
+  left: 1%;
+  transform: translateY(-50%);
+
+  display: flex;
+  gap: 2px;
+  align-items: center;
+  justify-content: center;
+
+  margin: 2px 0 0 2px;
+`;
+
+export const EditButton = styled.button`
   cursor: pointer;
-  flex: 1 1 0;
+
+  padding: 0 2px;
+  border: none;
+
+  font-family: Pretendard, sans-serif;
+  font-size: 10px;
+  font-weight: 600;
+  font-style: normal;
+
+  background: none;
+`;
+
+export const DeleteButton = styled.button`
+  cursor: pointer;
+
+  padding: 0 2px;
+  border: none;
+
+  font-family: Pretendard, sans-serif;
+  font-size: 10px;
+  font-weight: 600;
+  font-style: normal;
+
+  background: none;
+`;
+
+export const Quarter = styled.div`
   width: 100%;
+  height: 25%;
+
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+
+  font-size: 10px;
+  white-space: normal;
+  word-break: break-all;
+
+  position: relative;
+
+  ${({ selected, isStart, isEnd }) =>
+    selected &&
+    css`
+      font-weight: 600;
+      color: #4d5e80;
+      background: #40b59f80;
+      ${isStart && 'border-radius: 6px 6px 0 0; z-index: 100; padding: 2px 1px 0;'}
+      ${isEnd && 'border-radius: 0 0 6px 6px;'}
+      ${isStart && isEnd && 'border-radius: 6px;'}
+    `}
+`;
+
+export const DeleteScheduleButton = styled.button`
+  border: none;
+  color: #ffffff;
+  background: none;
 `;
 
 export const HeaderCell = styled(Cell)`

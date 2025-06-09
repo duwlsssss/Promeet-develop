@@ -164,30 +164,3 @@ export const TimeButton = styled.button`
 
   background: none;
 `;
-
-export const DeleteButton = styled.button`
-  cursor: pointer;
-
-  display: flex;
-  align-items: center;
-  justify-self: end;
-
-  padding: 0;
-  border: none;
-
-  background: none;
-`;
-
-export const AddButton = styled.button`
-  cursor: pointer;
-
-  padding: 0;
-  border: none;
-
-  font-family: Pretendard, sans-serif;
-  font-weight: 700;
-  font-style: normal;
-  color: #848a94;
-
-  background: none;
-`;
