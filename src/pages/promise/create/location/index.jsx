@@ -23,29 +23,27 @@ const LocationPage = () => {
   return (
     <S.Container>
       <Header text={PROMISE_CREATE_HEADER_TEXT} navigateUrl={ROUTES.PROMISE_CREATE_DATE} />
-      <S.LocationWrapper>
-        <Input
-          label="내 출발 위치"
-          placeholder="출발 위치를 입력해주세요"
-          onClick={openSearch}
-          style={{ cursor: 'pointer' }}
-        />
-        <S.FixedPlaceText onClick={openSearch}>이미 약속 위치를 정해놨어요</S.FixedPlaceText>
+      <Input
+        label="내 출발 위치"
+        placeholder="출발 위치를 입력해주세요"
+        onClick={openSearch}
+        readOnly
+        style={{ cursor: 'pointer' }}
+      />
 
-        <AnimatePresence>
-          {isSearchOpen && (
-            <S.Slide
-              variants={slideVariants}
-              initial="initial"
-              animate="animate"
-              exit="exit"
-              transition={slideVariants.transition}
-            >
-              <SearchLocation onBack={closeSearch} />
-            </S.Slide>
-          )}
-        </AnimatePresence>
-      </S.LocationWrapper>
+      <AnimatePresence>
+        {isSearchOpen && (
+          <S.Slide
+            variants={slideVariants}
+            initial="initial"
+            animate="animate"
+            exit="exit"
+            transition={slideVariants.transition}
+          >
+            <SearchLocation onBack={closeSearch} />
+          </S.Slide>
+        )}
+      </AnimatePresence>
     </S.Container>
   );
 };

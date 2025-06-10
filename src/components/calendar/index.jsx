@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import Calendar from 'react-calendar';
 import * as S from './style';
 import 'react-calendar/dist/Calendar.css';
@@ -30,7 +30,7 @@ export default function CalendarRange({ onChange, value }) {
     }
   };
 
-  const handleMouseUp = () => {
+  const handleMouseUp = useCallback(() => {
     if (dragRange.from && dragRange.to) {
       const [start, end] = [dragRange.from, dragRange.to].sort((a, b) => a - b);
       setRange([start, end]);
@@ -39,14 +39,14 @@ export default function CalendarRange({ onChange, value }) {
       }
     }
     setDragging(false);
-  };
+  }, [dragRange.from, dragRange.to, onChange]);
 
   useEffect(() => {
     document.addEventListener('mouseup', handleMouseUp);
     return () => {
       document.removeEventListener('mouseup', handleMouseUp);
     };
-  }, [dragRange]);
+  }, [dragRange, handleMouseUp]);
 
   return (
     <S.CalendarWrapper>

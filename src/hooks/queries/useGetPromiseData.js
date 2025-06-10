@@ -11,9 +11,11 @@ const useGetPromiseData = (promiseId, userId) => {
     queryFn: async () => {
       try {
         const { data } = await getPromiseData(promiseId, userId);
+        // 전역 상태에 약속 정보 저장
         return data;
       } catch (error) {
         handleError(error);
+        throw error;
       }
     },
     enabled: !!promiseId,

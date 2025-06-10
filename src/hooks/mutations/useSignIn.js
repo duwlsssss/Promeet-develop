@@ -4,39 +4,39 @@ import useErrorHandler from '../useHandleError';
 import { useUserActions } from '../stores/auth/useUserStore';
 import { ROUTES } from '@/constants/routes';
 import { postSignIn } from '@/apis/post/auth';
-import { getUserData } from '@/apis/get/auth';
+import { getUserData } from '@/apis/get/user';
 
 const useSignIn = (setError) => {
   const handleError = useErrorHandler();
   const navigate = useNavigate();
-  const { setUserId, setUserName, setFixedSchedules, setPromises } = useUserActions();
+  const { setUserId, setUserName, setFixedSchedules, setPromises, setUserType } = useUserActions();
 
   return useMutation({
-    mutationFn: ({ name, password, promiseId }) => postSignIn(name, password, promiseId),
-    onSuccess: async (data) => {
-      const userId = data.data.userId;
+    mutationFn: async ({ name, password, promiseId }) => postSignIn(name, password, promiseId),
+    onSuccess: async ({ data }, { promiseId }) => {
+      const userId = data.userId;
       setUserId(userId);
 
       // 데이터 프리로드
       const userData = await getUserData(userId);
-      const { name, fixedSchedule, promise } = userData.data;
+      const { name, fixedSchedule, promises } = userData.data;
 
       setUserName(name);
       setFixedSchedules(fixedSchedule);
       setPromises({
-        create: promise?.create ?? [],
-        join: promise?.join ?? [],
+        create: promises?.create ?? [],
+        join: promises?.join ?? [],
       });
 
-      navigate(ROUTES.HOME);
+      // 참여 요청받은 약속이면
+      if (promiseId && promises.join.includes(promiseId)) {
+        setUserType('join');
+        navigate(ROUTES.PROMISE_LOCATION);
+      } else {
+        navigate(ROUTES.HOME);
+      }
     },
     onError: (error) => {
-      if (error.code === 'MISSING_REQUIRED_FIELD') {
-        setError('name', '.');
-        setError('password', { message: error.message }); // 비번 필드 밑에만 에러 메시지 표시
-        return;
-      }
-
       if (error.code === 'INVALID_PASSWORD') {
         setError('password', { message: error.message });
         return;

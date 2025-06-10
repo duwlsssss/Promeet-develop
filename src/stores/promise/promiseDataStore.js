@@ -2,16 +2,14 @@ import { create } from 'zustand';
 import { devtools, persist } from 'zustand/middleware';
 import { immer } from 'zustand/middleware/immer';
 
+// 약속 생성시 사용할 데이터
 const initialState = {
   name: '',
   description: '',
   memberCnt: 2,
   availableTimes: [],
   nearestSubwayStation: null,
-  members: [],
-  routes: [],
-  likedPlaces: [],
-  fixedPlace: null,
+  selectedPlace: null,
 };
 
 const promiseDataStore = create()(
@@ -20,6 +18,7 @@ const promiseDataStore = create()(
       immer((set, get) => ({
         ...initialState,
         actions: {
+          // 약속 정보 입력시 저장할 것들
           setName: (name) =>
             set((state) => {
               state.name = name;
@@ -40,21 +39,10 @@ const promiseDataStore = create()(
             set((state) => {
               state.nearestSubwayStation = value;
             }),
-          setMembers: (members) =>
+          // 생성자가 선택하는 약속 장소
+          setSelectedPlace: (place) =>
             set((state) => {
-              state.members = members;
-            }),
-          setRoutes: (routes) =>
-            set((state) => {
-              state.routes = routes;
-            }),
-          setLikedPlaces: (places) =>
-            set((state) => {
-              state.likedPlaces = places;
-            }),
-          setFixedPlace: (place) =>
-            set((state) => {
-              state.fixedPlace = place;
+              state.selectedPlace = place;
             }),
           // 특정 단계까지의 데이터가 있는지 체크
           hasDataUntil: (step) => {
@@ -74,7 +62,7 @@ const promiseDataStore = create()(
           hasNearestSubwayStationData: () => !!get().nearestSubwayStation,
 
           // 모든 데이터 초기화
-          reset: () => set(initialState),
+          resetPromiseData: () => set(initialState),
         },
       })),
       {

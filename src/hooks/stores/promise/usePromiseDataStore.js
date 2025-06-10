@@ -9,10 +9,7 @@ export const usePromiseDataInfo = () =>
       memberCnt: state.memberCnt,
       availableTimes: state.availableTimes,
       nearestSubwayStation: state.nearestSubwayStation,
-      members: state.members,
-      routes: state.routes,
-      likedPlaces: state.likedPlaces,
-      fixedPlace: state.fixedPlace,
+      selectedPlace: state.selectedPlace,
     })),
   );
 

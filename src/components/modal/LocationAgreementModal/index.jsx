@@ -12,6 +12,7 @@ const LocationAgreementModal = ({ isOpen, onClose }) => {
   const [error, setError] = useState('');
 
   const handleError = (_err) => {
+    console.log(_err);
     setError('위치 정보를 가져올 수 없습니다.');
     setAllowMyLocation(false);
   };

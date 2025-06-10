@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { theme } from '@/styles/theme';
+// import { theme } from '@/styles/theme';
 
 export const Container = styled.section`
   display: flex;
@@ -7,9 +7,7 @@ export const Container = styled.section`
   align-items: center;
   justify-content: center;
 
-  width: 375px;
-
-  color: ${theme.color.point1};
+  width: 100%;
 `;
 
 export const TopBar = styled.div`

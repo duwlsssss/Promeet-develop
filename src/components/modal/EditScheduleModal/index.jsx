@@ -4,39 +4,8 @@ import DaySelectModal from '@/components/modal/DaySelectModal';
 import TimeSelectModal from '@/components/modal/TimeSelectModal';
 import selectIcon from '@/assets/img/icon/dropdown.svg';
 import crossIcon from '@/assets/img/icon/cross.svg';
+import { DAYS } from '@/constants/calender';
 import * as S from './style';
-
-export async function updateFixedSchedule(userId, scheduleId, fixedSchedule) {
-  // 데이터 콘솔 출력
-  console.log('[EditScheduleModal] updateFixedSchedule 호출', {
-    userId,
-    scheduleId,
-    fixedSchedule,
-  });
-
-  // 실제 서버 요청은 주석 처리
-  /*
-  try {
-    const response = await fetch(
-      `${import.meta.env.VITE_SERVER_API_URL}/user/${userId}/fixed-schedules/${scheduleId}`,
-      {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ fixedSchedule }),
-      },
-    );
-    const data = await response.json();
-    if (!response.ok || !data.success) {
-      throw new Error(data.error?.message || '수정에 실패했습니다.');
-    }
-    return { success: true };
-  } catch (error) {
-    return { success: false, error: error.message || '네트워크 오류' };
-  }
-  */
-  // 서버 없이 성공 처리
-  return { success: true };
-}
 
 // 시간 → 분 변환
 function timeToMinutes({ hour, minute }) {
@@ -56,10 +25,10 @@ function getEndMins(time) {
   return time.hour === '00' && time.minute === '00' ? 1440 : timeToMinutes(time);
 }
 
-const EditScheduleModal = ({ isOpen, schedule, userId, onClose, onUpdate }) => {
+const EditScheduleModal = ({ isOpen, schedule, onClose, onUpdate }) => {
   const [form, setForm] = useState({
     title: '',
-    day: '월요일',
+    day: 'Monday',
     startTime: { hour: '09', minute: '00' },
     endTime: { hour: '18', minute: '00' },
   });
@@ -67,16 +36,17 @@ const EditScheduleModal = ({ isOpen, schedule, userId, onClose, onUpdate }) => {
 
   useEffect(() => {
     if (schedule) {
+      console.log('console.log(schedule);', schedule);
       setForm({
-        title: schedule.title || '',
-        day: schedule.day || '월요일',
+        title: schedule.title ?? '',
+        day: schedule.day ?? 'Monday',
         startTime: {
-          hour: String(schedule.startTime.hour).padStart(2, '0'),
-          minute: String(schedule.startTime.minute).padStart(2, '0'),
+          hour: schedule.startTime.hour,
+          minute: schedule.startTime.minute,
         },
         endTime: {
-          hour: String(schedule.endTime.hour).padStart(2, '0'),
-          minute: String(schedule.endTime.minute).padStart(2, '0'),
+          hour: schedule.endTime.hour,
+          minute: schedule.endTime.minute,
         },
       });
     }
@@ -158,24 +128,14 @@ const EditScheduleModal = ({ isOpen, schedule, userId, onClose, onUpdate }) => {
 
     // 서버가 요구하는 형식으로 변환
     const fixedSchedule = {
-      id: schedule.scheduleId, // 또는 schedule.id
+      id: schedule.id,
       day: form.day,
       startTime: `${form.startTime.hour}:${form.startTime.minute}`,
       endTime: `${form.endTime.hour}:${form.endTime.minute}`,
       title: form.title, // title 필드가 필요하다면 포함
     };
 
-    const result = await updateFixedSchedule(userId, schedule.scheduleId, fixedSchedule);
-    if (result.success) {
-      onUpdate({
-        ...schedule,
-        ...form,
-        startTime: { ...form.startTime },
-        endTime: { ...form.endTime },
-      });
-    } else {
-      alert(result.error || '수정에 실패했습니다.');
-    }
+    onUpdate(fixedSchedule);
   };
 
   return (
@@ -202,7 +162,7 @@ const EditScheduleModal = ({ isOpen, schedule, userId, onClose, onUpdate }) => {
           <S.TableSetting>
             <S.DayTimeSelect>
               <S.DaySelectButton type="button" onClick={() => openModal('day')}>
-                {form.day}
+                {DAYS[form.day]}
                 <img src={selectIcon} alt="Select Day" />
               </S.DaySelectButton>
               <S.TimeRow>
@@ -227,6 +187,8 @@ const EditScheduleModal = ({ isOpen, schedule, userId, onClose, onUpdate }) => {
         isOpen={modalType === 'day'}
         onClose={closeModal}
         onSelect={handleDaySelect}
+        days={Object.keys(DAYS)}
+        dayLabels={DAYS}
       />
       <TimeSelectModal
         isOpen={modalType === 'start'}

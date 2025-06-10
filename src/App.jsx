@@ -65,8 +65,8 @@ function App() {
           {({ reset }) => (
             <ErrorBoundary onReset={reset} FallbackComponent={ErrorFallback}>
               <Suspense fallback={<DeferredLoader />}>
-                <Toast />
                 <Router />
+                <Toast />
               </Suspense>
             </ErrorBoundary>
           )}

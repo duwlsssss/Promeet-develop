@@ -1,57 +1,114 @@
 import * as S from './style';
+import { useState, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { v4 as uuidv4 } from 'uuid';
+import Header from '@/components/promise/Header';
+import Button from '@/components/ui/Button';
+import ShareLinkModal from '@/components/modal/ShareLinkModal';
 import AbleTimeTable from '@/components/timeTable/AbleTimeTable';
+import DeferredLoader from '@/components/ui/DeferredLoader';
+import { useUserInfo } from '@/hooks/stores/auth/useUserStore';
 import {
   usePromiseDataInfo,
   usePromiseDataActions,
 } from '@/hooks/stores/promise/usePromiseDataStore';
-import { useRef } from 'react';
+import useGetUserData from '@/hooks/queries/useGetUserData';
+import useCreatePromise from '@/hooks/mutations/useCreatePromise';
+import { PROMISE_CREATE_HEADER_TEXT } from '@/constants/promise';
+import { BUILD_ROUTES, ROUTES } from '@/constants/routes';
 
-// 시간 인덱스를 "HH:MM" 문자열로 변환
-function getTimeFromIndex(hourIdx, quarterIdx) {
-  const hour = String(hourIdx).padStart(2, '0');
-  const minute = String(quarterIdx * 15).padStart(2, '0');
-  return `${hour}:${minute}`;
-}
+const SchedulePage = () => {
+  // 공유 주소 모달
+  const [isOpenShareModal, setIsOpenShareModal] = useState(false);
+  const [shareLink, setShareLink] = useState('');
+  const [promiseId, setPromiseId] = useState('');
 
-// 선택된 시간표에서 연속된 구간 추출
-function extractTimeRanges(selectedDayArr) {
-  const ranges = [];
-  let rangeStart = null;
-  for (let h = 0; h < 24; h++) {
-    for (let q = 0; q < 4; q++) {
-      if (selectedDayArr[h][q]) {
-        if (rangeStart === null) rangeStart = { hour: h, quarter: q };
-      } else {
-        if (rangeStart !== null) {
-          ranges.push({
-            start: getTimeFromIndex(rangeStart.hour, rangeStart.quarter),
-            end: getTimeFromIndex(h, q),
-          });
-          rangeStart = null;
+  const navigate = useNavigate();
+
+  const { userId, fixedSchedules } = useUserInfo();
+  const { isPending: isGetUserDataPending } = useGetUserData(userId);
+
+  // 폼 제출 위해 가져옴
+  const { name, description, memberCnt, nearestSubwayStation, availableTimes } =
+    usePromiseDataInfo();
+  const { setAvailableTimes, resetPromiseData } = usePromiseDataActions();
+  const prevAvailableTimesRef = useRef(null);
+  const selectedRef = useRef(null);
+
+  const { mutateAsync: createPromise, isPending: isCreatePromisePending } = useCreatePromise();
+
+  const handleCreatePromiseBtnClick = async () => {
+    // 날짜별로 여러 구간을 각각 객체로 변환
+    const newAvailableTimes = [];
+    availableTimes.forEach((item) => {
+      if (!item.timeRanges || item.timeRanges.length === 0) return;
+      item.timeRanges.forEach((range) => {
+        newAvailableTimes.push({
+          id: uuidv4(),
+          date: item.date,
+          day: item.day,
+          startTime: range.startTime,
+          endTime: range.endTime,
+        });
+      });
+    });
+
+    const res = await createPromise({
+      creatorId: userId,
+      promiseName: name,
+      promiseDescription: description,
+      memberCnt,
+      nearestStation: nearestSubwayStation,
+      availableTimes: newAvailableTimes,
+    });
+
+    const pId = res.data.promiseId;
+    const shareLink = `https://promeet-develop.vercel.app/promise/${pId}/join`;
+    setPromiseId(pId);
+    setShareLink(shareLink);
+    setIsOpenShareModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsOpenShareModal(false);
+    resetPromiseData(); // 저장해놨던 데이터 비우기
+    navigate(BUILD_ROUTES.PROMISE_FINALIZE(promiseId));
+  };
+
+  // 시간 인덱스를 "HH:MM" 문자열로 변환
+  function getTimeFromIndex(hourIdx, quarterIdx) {
+    const hour = String(hourIdx).padStart(2, '0');
+    const minute = String(quarterIdx * 15).padStart(2, '0');
+    return `${hour}:${minute}`;
+  }
+
+  // 선택된 시간표에서 연속된 구간 추출
+  function extractTimeRanges(selectedDayArr) {
+    const ranges = [];
+    let rangeStart = null;
+    for (let h = 0; h < 24; h++) {
+      for (let q = 0; q < 4; q++) {
+        if (selectedDayArr[h][q]) {
+          if (rangeStart === null) rangeStart = { hour: h, quarter: q };
+        } else {
+          if (rangeStart !== null) {
+            ranges.push({
+              start: getTimeFromIndex(rangeStart.hour, rangeStart.quarter),
+              end: getTimeFromIndex(h, q),
+            });
+            rangeStart = null;
+          }
         }
       }
     }
+    if (rangeStart !== null) {
+      ranges.push({
+        start: getTimeFromIndex(rangeStart.hour, rangeStart.quarter),
+        end: '24:00',
+      });
+    }
+    return ranges;
   }
-  if (rangeStart !== null) {
-    ranges.push({
-      start: getTimeFromIndex(rangeStart.hour, rangeStart.quarter),
-      end: '24:00',
-    });
-  }
-  return ranges;
-}
-
-// 테스트용 고정 일정 데이터
-const fixedSchedule = [
-  { id: 'schedule1', day: 'Monday', startTime: '10:00', endTime: '12:00' },
-  { id: 'schedule2', day: 'Wednesday', startTime: '14:00', endTime: '16:00' },
-];
-
-const SchedulePage = () => {
-  const { availableTimes } = usePromiseDataInfo();
-  const { setAvailableTimes } = usePromiseDataActions();
-  const prevAvailableTimesRef = useRef(null);
-  const selectedRef = useRef(null);
 
   const handleTimeTableChange = (selected) => {
     selectedRef.current = selected;
@@ -79,39 +136,40 @@ const SchedulePage = () => {
     }
   };
 
-  // 약속 생성 버튼 클릭 시 실행
-  const handleCreatePromise = () => {
-    // 날짜별로 여러 구간을 각각 객체로 변환
-    const newAvailableTimes = [];
-    availableTimes.forEach((item, idx) => {
-      if (!item.timeRanges || item.timeRanges.length === 0) return;
-      item.timeRanges.forEach((range, rIdx) => {
-        newAvailableTimes.push({
-          id: `schedule${idx + 1}_${rIdx + 1}`,
-          date: item.date,
-          day: item.day,
-          startTime: range.startTime,
-          endTime: range.endTime,
-        });
-      });
-    });
-    console.log('최종 API 요청용 availableTimes:', newAvailableTimes);
-    // setAvailableTimes(newAvailableTimes);
-  };
-
   return (
-    <S.Container>
-      <S.TableScrollWrapper>
-        <S.TableInnerWrapper>
-          <AbleTimeTable
-            days={availableTimes}
-            onChange={handleTimeTableChange}
-            fixedSchedule={fixedSchedule}
+    <>
+      {isGetUserDataPending ? (
+        <DeferredLoader />
+      ) : (
+        <>
+          <S.Container>
+            <Header
+              text={PROMISE_CREATE_HEADER_TEXT}
+              navigateUrl={ROUTES.PROMISE_CREATE_LOCATION}
+            />
+            <S.TableScrollWrapper>
+              <S.TableInnerWrapper>
+                <AbleTimeTable
+                  days={availableTimes}
+                  onChange={handleTimeTableChange}
+                  fixedSchedules={fixedSchedules}
+                />
+              </S.TableInnerWrapper>
+            </S.TableScrollWrapper>
+            <S.BtnWrapper>
+              <Button onClick={handleCreatePromiseBtnClick} disabled={isCreatePromisePending}>
+                {isCreatePromisePending ? '약속 생성 중...' : '약속 생성'}
+              </Button>
+            </S.BtnWrapper>
+          </S.Container>
+          <ShareLinkModal
+            isOpen={isOpenShareModal}
+            shareLink={shareLink}
+            onClose={handleCloseModal}
           />
-        </S.TableInnerWrapper>
-      </S.TableScrollWrapper>
-      <S.CreatePromiseButton onClick={handleCreatePromise}>약속 생성</S.CreatePromiseButton>
-    </S.Container>
+        </>
+      )}
+    </>
   );
 };
 

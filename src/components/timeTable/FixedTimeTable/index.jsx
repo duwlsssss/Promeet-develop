@@ -1,11 +1,13 @@
 import * as S from './style';
+import { useState } from 'react';
 import TimeIcon from '../../../assets/img/icon/time.svg';
 import EditIcon from '../../../assets/img/icon/edit.svg';
 import DelIcon from '../../../assets/img/icon/delete.svg';
 import PropTypes from 'prop-types';
-import { useState } from 'react';
+import { DAYS } from '@/constants/calender';
 
-const DAYS = ['월', '화', '수', '목', '금', '토', '일'];
+import { useUserInfo } from '@/hooks/stores/auth/useUserStore';
+import useGetUserData from '@/hooks/queries/useGetUserData';
 
 function timeToMinutes({ hour, minute }) {
   return Number(hour) * 60 + Number(minute);
@@ -15,7 +17,10 @@ function getEndMins(time) {
   return time.hour === '00' && time.minute === '00' ? 1440 : timeToMinutes(time);
 }
 
-const FixedTimeTable = ({ schedules, defaultStart, defaultEnd, onEdit, onDelete }) => {
+const FixedTimeTable = ({ defaultStart, defaultEnd, onEdit, onDelete }) => {
+  const { userId } = useUserInfo();
+  useGetUserData(userId);
+
   // 선택된 scheduleId를 state로 관리
   const [selectedId, setSelectedId] = useState(null);
 
@@ -25,9 +30,12 @@ const FixedTimeTable = ({ schedules, defaultStart, defaultEnd, onEdit, onDelete 
   let minTime = defaultMin;
   let maxTime = defaultMax;
 
-  if (schedules.length > 0) {
-    const allStart = schedules.map((s) => timeToMinutes(s.startTime));
-    const allEnd = schedules.map((s) => getEndMins(s.endTime)); // <-- 여기!
+  const { fixedSchedules } = useUserInfo();
+  console.log('fixedSchedules in FixedTimeTable', fixedSchedules);
+
+  if (fixedSchedules.length > 0) {
+    const allStart = fixedSchedules.map((s) => timeToMinutes(s.startTime));
+    const allEnd = fixedSchedules.map((s) => getEndMins(s.endTime)); // <-- 여기!
     const minSchedule = Math.min(...allStart);
     const maxSchedule = Math.max(...allEnd);
 
@@ -48,11 +56,9 @@ const FixedTimeTable = ({ schedules, defaultStart, defaultEnd, onEdit, onDelete 
   const getScheduleForCell = (day, hour, quarter) => {
     const minute = quarter * 15;
     const cellTime = timeToMinutes({ hour, minute: String(minute).padStart(2, '0') });
-    return schedules.find(
+    return fixedSchedules.find(
       (s) =>
-        s.day.startsWith(day) &&
-        cellTime >= timeToMinutes(s.startTime) &&
-        cellTime < getEndMins(s.endTime),
+        s.day === day && cellTime >= timeToMinutes(s.startTime) && cellTime < getEndMins(s.endTime),
     );
   };
 
@@ -77,22 +83,24 @@ const FixedTimeTable = ({ schedules, defaultStart, defaultEnd, onEdit, onDelete 
     );
   };
 
+  console.log(DAYS);
+
   return (
     <S.TableWrapper>
       <S.Row>
         <S.HeaderCell $noTop $noLeft>
-          <img src={TimeIcon} alt="시간표 아이콘" width={24} height={24} />
+          <img src={TimeIcon} alt="시간표 아이콘" width={14} height={14} />
         </S.HeaderCell>
-        {DAYS.map((day) => (
+        {Object.keys(DAYS).map((day) => (
           <S.HeaderCell key={day} $noTop>
-            {day}
+            {DAYS[day]}
           </S.HeaderCell>
         ))}
       </S.Row>
       {hours.map((hour) => (
         <S.Row key={hour}>
           <S.HeaderCell $noLeft>{hour}</S.HeaderCell>
-          {DAYS.map((day) => (
+          {Object.keys(DAYS).map((day) => (
             <S.Cell key={day}>
               {Array.from({ length: 4 }).map((_, quarter) => {
                 const schedule = getScheduleForCell(day, hour, quarter);
@@ -108,9 +116,7 @@ const FixedTimeTable = ({ schedules, defaultStart, defaultEnd, onEdit, onDelete 
                     isEnd={isEnd}
                     onClick={() => {
                       if (schedule) {
-                        setSelectedId(
-                          selectedId === schedule.scheduleId ? null : schedule.scheduleId,
-                        );
+                        setSelectedId(selectedId === schedule.id ? null : schedule.id);
                       }
                     }}
                     style={{ cursor: schedule ? 'pointer' : 'default' }}
@@ -119,10 +125,8 @@ const FixedTimeTable = ({ schedules, defaultStart, defaultEnd, onEdit, onDelete 
                       <>
                         {schedule.title}
                         {/* 선택된 일정의 범위에서만 버튼 노출 */}
-                        {!!schedule && selectedId === schedule.scheduleId && (
-                          <S.ButtonGroup
-                            style={{ opacity: selectedId === schedule.scheduleId ? 1 : 0 }}
-                          >
+                        {!!schedule && selectedId === schedule.id && (
+                          <S.ButtonGroup style={{ opacity: selectedId === schedule.id ? 1 : 0 }}>
                             <S.EditButton
                               onClick={(e) => {
                                 e.stopPropagation();
@@ -157,21 +161,6 @@ const FixedTimeTable = ({ schedules, defaultStart, defaultEnd, onEdit, onDelete 
 };
 
 FixedTimeTable.propTypes = {
-  schedules: PropTypes.arrayOf(
-    PropTypes.shape({
-      scheduleId: PropTypes.string.isRequired,
-      title: PropTypes.string.isRequired,
-      day: PropTypes.string.isRequired,
-      startTime: PropTypes.shape({
-        hour: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
-        minute: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
-      }).isRequired,
-      endTime: PropTypes.shape({
-        hour: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
-        minute: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
-      }).isRequired,
-    }),
-  ).isRequired,
   defaultStart: PropTypes.shape({
     hour: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
     minute: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,

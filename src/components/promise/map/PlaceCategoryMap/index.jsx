@@ -1,24 +1,22 @@
 import * as S from './style';
+import { useState } from 'react';
 import Tabs from '@/components/ui/Tabs';
 import MapContainer from '../MapContainer';
 import SearchPlace from '../SearchPlace';
 import { useTabsInfo } from '@/hooks/stores/ui/useTabsStore';
 import { useLocationInfo, useLocationActions } from '@/hooks/stores/promise/useLocationStore';
+import { usePromiseDataFromServerInfo } from '@/hooks/stores/promise/usePromiseDataFromServerStore';
 import useHandleError from '@/hooks/useHandleError';
 import { CATEGORY, CATEGORY_LABEL } from '@/constants/place';
-import { MY_LOC_MARKER_ID } from '@/constants/map';
-import { useState } from 'react';
+import { MY_LOC_MARKER_ID, DEFAULT_LAT, DEFAULT_LNG } from '@/constants/map';
 import LocationAgreementModal from '@/components/modal/LocationAgreementModal';
 
 const PlaceCategoryMap = () => {
   const { selectedValue } = useTabsInfo();
-  const { allowMyLocation } = useLocationInfo();
+  const { allowMyLocation, myLocation } = useLocationInfo();
   const { setMyLocation } = useLocationActions();
+  const { promiseDataFromServer } = usePromiseDataFromServerInfo();
   const [isLocationModalOpen, setIsLocationModalOpen] = useState(false);
-
-  // 임시 사용자 좌표
-  const schoolLat = 37.494705526855;
-  const schoolLng = 126.95994559383;
 
   const handleError = useHandleError();
 
@@ -31,7 +29,7 @@ const PlaceCategoryMap = () => {
           (position) => {
             const { latitude, longitude } = position.coords;
             setMyLocation({
-              position: { La: latitude, Ma: longitude },
+              position: { Ma: latitude, La: longitude },
               id: MY_LOC_MARKER_ID, // 내 위치 마커 구분용
             });
           },
@@ -41,10 +39,13 @@ const PlaceCategoryMap = () => {
     }
   };
 
+  const mapLat = myLocation.position.Ma ?? DEFAULT_LAT;
+  const mapLng = myLocation.position.La ?? DEFAULT_LNG;
+
   return (
     <>
-      <MapContainer lat={schoolLat} lng={schoolLng}>
-        <SearchPlace category={selectedValue} />
+      <MapContainer lat={mapLat} lng={mapLng}>
+        <SearchPlace category={selectedValue} canFix={promiseDataFromServer.canFix} />
       </MapContainer>
       <S.TabsWrapper>
         <Tabs defaultValue={CATEGORY.RESTAURANT} option="장소 카테고리 탭">

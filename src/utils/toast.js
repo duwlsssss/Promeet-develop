@@ -6,13 +6,13 @@ const toast = (message) => {
   if (store.isOpen) {
     return;
   }
-  store.show(message);
+  store.actions.show(message);
 };
 
 // 토스트를 강제 종료하는 함수
 export const closeToast = () => {
   const store = toastStore.getState();
-  store.close();
+  store.actions.close();
 };
 
 export default toast;

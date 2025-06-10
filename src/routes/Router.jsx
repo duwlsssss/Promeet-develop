@@ -7,6 +7,7 @@ import {
   CreateOnlyWrapper,
   JoinOnlyWrapper,
   PromiseMemberWrapper,
+  PromiseCreateWrapper,
 } from './PageWrappers';
 
 //페이지
@@ -55,21 +56,31 @@ const publicRoutes = [
 
 const privateRoutes = [
   // 약속 생성 관련
+  // 이전 단계 확인 필요한 페이지
   {
-    path: ROUTES.PROMISE_CREATE_INFO,
-    element: <InfoPage />,
-  },
-  {
-    path: ROUTES.PROMISE_CREATE_DATE,
-    element: <DatePage />,
-  },
-  {
-    path: ROUTES.PROMISE_CREATE_LOCATION,
-    element: <LocationPage />,
-  },
-  {
-    path: ROUTES.PROMISE_CREATE_SCHEDULE,
-    element: <SchedulePage />,
+    element: (
+      <PromiseCreateWrapper>
+        <Outlet />
+      </PromiseCreateWrapper>
+    ),
+    children: [
+      {
+        path: ROUTES.PROMISE_CREATE_INFO,
+        element: <InfoPage />,
+      },
+      {
+        path: ROUTES.PROMISE_CREATE_DATE,
+        element: <DatePage />,
+      },
+      {
+        path: ROUTES.PROMISE_CREATE_LOCATION,
+        element: <LocationPage />,
+      },
+      {
+        path: ROUTES.PROMISE_CREATE_SCHEDULE,
+        element: <SchedulePage />,
+      },
+    ],
   },
   {
     path: ROUTES.PROMISE_FINALIZE,

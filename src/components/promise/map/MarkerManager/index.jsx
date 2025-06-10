@@ -53,7 +53,7 @@ const MarkerManager = ({ markers, routes }) => {
     markers.forEach((markerData) => {
       if (markerData.placeId === MY_LOC_MARKER_ID) return; // 내 위치 마커는 별도 처리
 
-      const position = new window.kakao.maps.LatLng(markerData.position.La, markerData.position.Ma);
+      const position = new window.kakao.maps.LatLng(markerData.position.Ma, markerData.position.La);
       const imageSrc = CATEGORY_MARKER_IMAGE[markerData.type];
       if (!imageSrc) return;
 
@@ -82,7 +82,7 @@ const MarkerManager = ({ markers, routes }) => {
         // polyline
         const path = userRoute.route.map(
           (station) =>
-            new window.kakao.maps.LatLng(station.station.position.La, station.station.position.Ma),
+            new window.kakao.maps.LatLng(station.station.position.Ma, station.station.position.La),
         );
 
         const polyline = new window.kakao.maps.Polyline({
@@ -111,8 +111,8 @@ const MarkerManager = ({ markers, routes }) => {
             </div>
           `,
           position: new window.kakao.maps.LatLng(
-            firstStation.position.La,
             firstStation.position.Ma,
+            firstStation.position.La,
           ),
           yAnchor: 1.05,
           map,
@@ -123,8 +123,8 @@ const MarkerManager = ({ markers, routes }) => {
         // 도착역
         const lastStation = userRoute.route[userRoute.route.length - 1].station;
         const stationPosition = new window.kakao.maps.LatLng(
-          lastStation.position.La,
           lastStation.position.Ma,
+          lastStation.position.La,
         );
 
         // 마커
@@ -322,8 +322,8 @@ MarkerManager.propTypes = {
             address: PropTypes.string.isRequired,
             name: PropTypes.string.isRequired,
             position: PropTypes.shape({
-              La: PropTypes.number.isRequired,
               Ma: PropTypes.number.isRequired,
+              La: PropTypes.number.isRequired,
             }).isRequired,
           }).isRequired,
           duration: PropTypes.number.isRequired,

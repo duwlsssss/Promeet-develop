@@ -5,7 +5,7 @@ import DeferredLoader from '@/components/ui/DeferredLoader';
 import Button from '@/components/ui/Button';
 import Navbar from '@/layouts/Navbar';
 import useGetUserData from '@/hooks/queries/useGetUserData';
-// import useGetMultiplePromiseData from '@/hooks/queries/useGetMultiplePromiseData';
+import useGetMultiplePromiseData from '@/hooks/queries/useGetMultiplePromiseData';
 import { useUserInfo } from '@/hooks/stores/auth/useUserStore';
 import useLogout from '@/hooks/mutations/useLogout';
 import { ROUTES } from '@/constants/routes';
@@ -47,141 +47,34 @@ const classifyPromises = (Promises) => {
 
 const HomePage = () => {
   const navigate = useNavigate();
-  const { userId, userName } = useUserInfo();
-  // const { userId, userName, promises } = useUserInfo();
+  const { userId, userName, promises } = useUserInfo();
 
   const { isPending: isGetUserDataPending } = useGetUserData(userId);
 
-  // const createIds = promises.create ?? []; // 생성한 약속 ids
-  // const joinIds = promises.join ?? []; // 초대받은 약속 ids
+  const createIds = promises.create ?? []; // 생성한 약속 ids
+  const joinIds = promises.join ?? []; // 초대받은 약속 ids
 
-  // const createQueries = useGetMultiplePromiseData(createIds, userId);
-  // const joinQueries = useGetMultiplePromiseData(joinIds, userId);
+  const createQueries = useGetMultiplePromiseData(createIds, userId);
+  const joinQueries = useGetMultiplePromiseData(joinIds, userId);
 
   const { mutate: logout, isPending: isLogoutPending } = useLogout();
   const handleLogout = () => {
     logout({ userId });
   };
 
-  // const isLoading =
-  //   isGetUserDataPending ||
-  //   createQueries.some((q) => q.isPending) ||
-  //   joinQueries.some((q) => q.isPending);
-  const isLoading = isGetUserDataPending;
+  const isLoading =
+    isGetUserDataPending ||
+    createQueries.some((q) => q.isPending) ||
+    joinQueries.some((q) => q.isPending);
 
-  // // falsy값 제거해 정상적으로 받은 데이터만 필터링
-  // const createdPromises = createQueries.map((q) => q.data).filter(Boolean);
-  // const joinedPromises = joinQueries.map((q) => q.data).filter(Boolean);
+  // falsy값 제거해 정상적으로 받은 데이터만 필터링
+  const createdPromises = createQueries.map((q) => q.data).filter(Boolean);
+  const joinedPromises = joinQueries.map((q) => q.data).filter(Boolean);
 
-  // const allPromises = [...createdPromises, ...joinedPromises]; // 생성 + 초대
-  // const { todayPromises, futurePromises } = classifyPromises(allPromises);
+  // console.log(createIds);
 
-  const _createdPromises = [
-    {
-      id: 'promise1',
-      title: '친구들과 저녁약속',
-      description: '오랜만에 모이는 회식자리!',
-      fixedTime: [
-        {
-          id: 'ft1',
-          date: '2025-06-08',
-          day: 'Sunday',
-          startTime: '18:00',
-          endTime: '20:00',
-        },
-      ],
-      fixedPlace: {
-        placeId: 'p1',
-        type: 'restaurant',
-        name: '상도 곱창',
-        position: { La: 37.49808, Ma: 127.028 },
-        address: '서울 동작구 상도로 232',
-        phone: '02-123-4567',
-        link: 'https://place1.com',
-      },
-    },
-    {
-      id: 'promise2',
-      title: '스터디 모임',
-      description: '중간고사 대비 스터디',
-      fixedTime: [
-        {
-          id: 'ft2',
-          date: '2025-06-10',
-          day: 'Tuesday',
-          startTime: '10:00',
-          endTime: '12:00',
-        },
-        {
-          id: 'ft3',
-          date: '2025-06-12',
-          day: 'Thursday',
-          startTime: '14:00',
-          endTime: '16:00',
-        },
-      ],
-      fixedPlace: {
-        placeId: 'p2',
-        type: 'studyCafe',
-        name: '이디야 커피 상도점',
-        position: { La: 37.499, Ma: 127.029 },
-        address: '서울 동작구 상도로 100',
-        phone: '02-234-5678',
-        link: 'https://place2.com',
-      },
-    },
-  ];
-  const _joinedPromises = [
-    {
-      id: 'promise3',
-      title: '운동 약속',
-      description: 'PT 끝나고 다같이 저녁!',
-      fixedTime: [
-        {
-          id: 'ft4',
-          date: '2025-06-07',
-          day: 'Saturday',
-          startTime: '17:00',
-          endTime: '18:00',
-        },
-      ],
-      fixedPlace: {
-        placeId: 'p3',
-        type: 'activity',
-        name: '휘트니스 센터',
-        position: { La: 37.501, Ma: 127.032 },
-        address: '서울 서초구 반포대로 50',
-        phone: '02-345-6789',
-        link: 'https://gym.com',
-      },
-    },
-    {
-      id: 'promise4',
-      title: '가족 모임',
-      description: '외할머니 생신 기념 모임',
-      fixedTime: [
-        {
-          id: 'ft5',
-          date: '2025-06-09',
-          day: 'Monday',
-          startTime: '12:00',
-          endTime: '14:00',
-        },
-      ],
-      fixedPlace: {
-        placeId: 'p4',
-        type: 'restaurant',
-        name: '한정식 궁',
-        position: { La: 37.502, Ma: 127.033 },
-        address: '서울 강남구 논현로 120',
-        phone: '02-456-7890',
-        link: 'https://koreanfood.com',
-      },
-    },
-  ];
-  const _allPromises = [..._createdPromises, ..._joinedPromises];
-  const { todayPromises: _todayPromises, futurePromises: _futurePromises } =
-    classifyPromises(_allPromises);
+  const allPromises = [...createdPromises, ...joinedPromises]; // 생성 + 초대
+  const { todayPromises, futurePromises } = classifyPromises(allPromises);
 
   const handleCreatePromiseBtnClick = () => {
     if (!userId) navigate(ROUTES.SIGN_IN);
@@ -211,27 +104,25 @@ const HomePage = () => {
             <S.Header>{`${userName}님,\n오늘 일정 잊지 않으셨죠?`}</S.Header>
             <h3>임시 오늘 약속</h3>
             {/* 카드 컴포넌트로 변경해 사용해주세요 */}
-            {_todayPromises.map((promise) => (
+            {todayPromises.map((promise) => (
               <div key={promise.id} data={promise}>
                 {promise.title}
               </div>
             ))}
             <h3>임시 다가오는 약속</h3>
-            {_futurePromises.map((promise) => (
+            {futurePromises.map((promise) => (
               <div key={promise.id} data={promise}>
                 {promise.title}
-                {promise.fixedTime[0].date}
-                {promise.fixedTime[0].startTime}
               </div>
             ))}
             <h3>임시 내가 생성한 약속</h3>
-            {_createdPromises.map((promise) => (
+            {createdPromises.map((promise) => (
               <div key={promise.id} data={promise}>
                 {promise.title}
               </div>
             ))}
             <h3>임시 초대받은 약속</h3>
-            {_joinedPromises.map((promise) => (
+            {joinedPromises.map((promise) => (
               <div key={promise.id} data={promise}>
                 {promise.title}
               </div>

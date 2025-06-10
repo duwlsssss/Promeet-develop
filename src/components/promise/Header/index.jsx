@@ -41,7 +41,7 @@ const Header = ({
 Header.propTypes = {
   text: PropTypes.string.isRequired,
   backward: PropTypes.bool,
-  backwardSize: PropTypes.number,
+  backwardSize: PropTypes.string,
   backwardType: PropTypes.oneOf(Object.values(BACKWARD_ICON)),
   navigateUrl: PropTypes.string,
   onBackwardClick: PropTypes.func,

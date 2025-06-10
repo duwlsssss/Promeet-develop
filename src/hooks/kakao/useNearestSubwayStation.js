@@ -1,16 +1,17 @@
 import { useEffect } from 'react';
-import { useLocationActions } from '@/hooks/stores/promise/useLocationStore';
+import { usePromiseDataActions } from '@/hooks/stores/promise/usePromiseDataStore';
 
 const SubwayCategoryCode = 'SW8';
 
 const useNearestSubwayStation = (lat, lng) => {
-  const { setNearestSubwayStation } = useLocationActions();
+  const { setNearestSubwayStation } = usePromiseDataActions();
 
   useEffect(() => {
     if (!window.kakao || !window.kakao.maps || !lat || !lng) return;
 
+    console.log(lat, lng);
     const ps = new window.kakao.maps.services.Places();
-    const position = new window.kakao.maps.LatLng(lat, lng);
+    const location = new window.kakao.maps.LatLng(lat, lng);
 
     ps.categorySearch(
       SubwayCategoryCode,
@@ -22,8 +23,8 @@ const useNearestSubwayStation = (lat, lng) => {
             id: nearestStation.id,
             name: nearestStation.place_name,
             position: {
-              lat: nearestStation.y,
-              lng: nearestStation.x,
+              Ma: nearestStation.y,
+              La: nearestStation.x,
             },
             address: nearestStation.address,
             distance: nearestStation.distance,
@@ -31,7 +32,7 @@ const useNearestSubwayStation = (lat, lng) => {
         }
       },
       {
-        position,
+        location,
         radius: 2000, // 반경 2km 안에서 검색
         sort: window.kakao.maps.services.SortBy.DISTANCE, // 거리순 정렬
       },

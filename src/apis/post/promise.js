@@ -9,3 +9,23 @@ export const postPlaceLike = async (promiseId, place, userId) => {
   });
   return data;
 };
+
+// 약속 생성
+export const postPromise = async (
+  creatorId,
+  promiseName,
+  promiseDescription,
+  memberCnt,
+  nearestStation,
+  availableTimes,
+) => {
+  const { data } = await axiosInstance.post(`/promises`, {
+    creatorId,
+    promiseName,
+    promiseDescription,
+    memberCnt,
+    nearestStation,
+    availableTimes,
+  });
+  return data;
+};

@@ -5,11 +5,13 @@ import LocationIconSVG from '@/assets/img/icon/location.svg?react';
 export const Container = styled.section`
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 20px;
   padding: 0 var(--outlet-padding);
 `;
 
 export const CurrLocationButton = styled.button`
+  cursor: pointer;
+
   display: flex;
   gap: 10px;
   align-items: center;

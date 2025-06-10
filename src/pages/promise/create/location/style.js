@@ -5,23 +5,7 @@ import { theme } from '@/styles/theme';
 export const Container = styled.section`
   display: flex;
   flex-direction: column;
-`;
-
-export const LocationWrapper = styled.section`
-  display: flex;
-  flex-direction: column;
   gap: 20px;
-`;
-
-export const FixedPlaceText = styled.p`
-  cursor: pointer;
-  font-size: 15px;
-  font-weight: 500;
-  color: ${theme.color.text.blue};
-
-  &:hover {
-    text-decoration: underline;
-  }
 `;
 
 export const Slide = styled(motion.div)`

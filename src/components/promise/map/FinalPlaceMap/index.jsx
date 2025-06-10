@@ -15,8 +15,8 @@ const FinalPlaceMap = ({ place }) => {
 FinalPlaceMap.propTypes = {
   place: PropTypes.shape({
     position: PropTypes.shape({
-      La: PropTypes.number.isRequired,
       Ma: PropTypes.number.isRequired,
+      La: PropTypes.number.isRequired,
     }).isRequired,
     id: PropTypes.string,
     type: PropTypes.oneOf(Object.values(CATEGORY)),

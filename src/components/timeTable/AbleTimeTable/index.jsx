@@ -1,10 +1,10 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
+import PropTypes from 'prop-types';
 import * as S from './style';
 import TimeIcon from '../../../assets/img/icon/time.svg';
-import PropTypes from 'prop-types';
+import { DAYS } from '@/constants/calender';
 
 const HOURS = Array.from({ length: 24 }, (_, i) => String(i).padStart(2, '0'));
-const DAY_KOR = ['일', '월', '화', '수', '목', '금', '토'];
 
 // 시간 인덱스를 "HH:MM" 문자열로 변환
 function getTimeFromIndex(hourIdx, quarterIdx) {
@@ -13,7 +13,7 @@ function getTimeFromIndex(hourIdx, quarterIdx) {
   return `${hour}:${minute}`;
 }
 
-const AbleTimeTable = ({ days, onChange, fixedSchedule = [] }) => {
+const AbleTimeTable = ({ days, onChange, fixedSchedules = [] }) => {
   const [selected, setSelected] = useState(
     Array.from({ length: 24 }, () =>
       Array.from({ length: days.length }, () => Array(4).fill(false)),
@@ -58,30 +58,37 @@ const AbleTimeTable = ({ days, onChange, fixedSchedule = [] }) => {
 
   // 고정 일정 셀 여부
   const isFixedCell = useCallback(
-    (dayName, hourIdx, quarterIdx) => {
+    (day, hourIdx, quarterIdx) => {
       const cellTime = getTimeFromIndex(hourIdx, quarterIdx);
-      return fixedSchedule.some(
-        (fs) => fs.day === dayName && fs.startTime <= cellTime && cellTime < fs.endTime,
-      );
+
+      return fixedSchedules.some((fs) => {
+        const startTime = `${fs.startTime.hour}:${fs.startTime.minute}`;
+        const endTime =
+          fs.endTime.hour === '00' && fs.endTime.minute === '00'
+            ? '24:00'
+            : `${fs.endTime.hour}:${fs.endTime.minute}`;
+
+        return fs.day === day && startTime <= cellTime && cellTime < endTime;
+      });
     },
-    [fixedSchedule],
+    [fixedSchedules],
   );
 
   return (
     <S.TableWrapper onMouseLeave={handleMouseUp} onMouseUp={handleMouseUp}>
       <S.Row>
         <S.HeaderCell $noTop $noLeft>
-          <img src={TimeIcon} alt="시간표" width={24} height={24} />
+          <img src={TimeIcon} alt="시간표" width={14} height={14} />
         </S.HeaderCell>
         {days.map((item) => {
           const dateObj = new Date(item.date);
-          const dayKor = DAY_KOR[dateObj.getDay()];
+          const dayEng = Object.keys(DAYS)[dateObj.getDay()];
           const dateStr = `${String(dateObj.getMonth() + 1).padStart(2, '0')}.${String(
             dateObj.getDate(),
           ).padStart(2, '0')}`;
           return (
             <S.HeaderCell key={item.date} $noTop>
-              {dateStr} <br /> {dayKor}
+              {dateStr} <br /> {DAYS[dayEng].slice(0, 1)}
             </S.HeaderCell>
           );
         })}
@@ -116,7 +123,7 @@ const AbleTimeTable = ({ days, onChange, fixedSchedule = [] }) => {
 AbleTimeTable.propTypes = {
   days: PropTypes.array.isRequired,
   onChange: PropTypes.func,
-  fixedSchedule: PropTypes.array,
+  fixedSchedules: PropTypes.array,
 };
 
 export default AbleTimeTable;

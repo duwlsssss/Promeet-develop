@@ -1,6 +1,8 @@
 import styled from 'styled-components';
-import { theme } from '@/styles/theme';
+// import { theme } from '@/styles/theme';
 
 export const Container = styled.section`
-  color: ${theme.color.point1};
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 `;

@@ -1,6 +1,14 @@
-import * as S from './style';
+import WaitingSubmit from '@/components/promise/WaitingSubmit';
+import PlaceCategoryMap from '@/components/promise/map/PlaceCategoryMap';
+import { usePromiseDataFromServerInfo } from '@/hooks/stores/promise/usePromiseDataFromServerStore';
 
 const JoinResultPage = () => {
-  return <S.Container>참여자 약속 장소 좋아요 페이지</S.Container>;
+  const { promiseDataFromServer } = usePromiseDataFromServerInfo();
+
+  if (!promiseDataFromServer.isAllMemebersSubmit) {
+    return <WaitingSubmit />;
+  }
+
+  return <PlaceCategoryMap />;
 };
 export default JoinResultPage;

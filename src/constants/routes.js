@@ -25,6 +25,7 @@ export const ROUTES = {
 };
 
 export const BUILD_ROUTES = {
+  PROMISE_CREATE: (step) => `/promise/create/${step}`,
   PROMISE_JOIN: (id) => `/promise/${id}/join`,
   PROMISE_LOCATION: (id) => `/promise/${id}/location`,
   PROMISE_SCHEDULE: (id) => `/promise/${id}/schedule`,

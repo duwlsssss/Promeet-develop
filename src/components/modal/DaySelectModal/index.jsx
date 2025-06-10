@@ -1,7 +1,6 @@
 import PropTypes from 'prop-types';
 import * as S from './style';
-
-const DAYS = ['월요일', '화요일', '수요일', '목요일', '금요일', '토요일', '일요일'];
+import { DAYS } from '@/constants/calender';
 
 const DaySelectModal = ({ isOpen, onClose, onSelect }) => {
   const handleOverlayClick = (e) => {
@@ -14,7 +13,7 @@ const DaySelectModal = ({ isOpen, onClose, onSelect }) => {
     <S.Overlay onClick={handleOverlayClick}>
       <S.Modal>
         <S.List>
-          {DAYS.map((day) => (
+          {Object.keys(DAYS).map((day) => (
             <S.Item key={day}>
               <S.Button
                 type="button"
@@ -23,7 +22,7 @@ const DaySelectModal = ({ isOpen, onClose, onSelect }) => {
                   onClose();
                 }}
               >
-                {day}
+                {DAYS[day]}
               </S.Button>
             </S.Item>
           ))}

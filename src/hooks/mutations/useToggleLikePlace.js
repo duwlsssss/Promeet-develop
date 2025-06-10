@@ -6,17 +6,17 @@ import queryClient from '@/lib/tanstack-query/queryClient';
 import { QUERY_KEY } from '@/constants/key';
 import { useUserInfo } from '@/hooks/stores/auth/useUserStore';
 import {
-  usePromiseDataInfo,
-  usePromiseDataActions,
-} from '@/hooks/stores/promise/usePromiseDataStore';
+  usePromiseDataFromServerInfo,
+  usePromiseDataFromServerActions,
+} from '@/hooks/stores/promise/usePromiseDataFromServerStore';
 
 const useToggleLikePlace = () => {
   const handleError = useHandleError();
   const { userId } = useUserInfo();
-  const { likedPlaces } = usePromiseDataInfo();
-  const { setLikedPlaces } = usePromiseDataActions();
+  const { promiseDataFromServer } = usePromiseDataFromServerInfo();
+  const { setLikedPlaces } = usePromiseDataFromServerActions();
 
-  return useMutation({
+  const mutation = useMutation({
     mutationFn: ({ promiseId, place, isLiked }) => {
       isLiked
         ? deletePlaceLike(promiseId, place.placeId, userId)
@@ -111,6 +111,18 @@ const useToggleLikePlace = () => {
       });
     },
   });
+
+  // promiseDataFromServer가 없으면 빈 mutation 반환
+  if (!promiseDataFromServer) {
+    return {
+      mutate: () => {},
+      isPending: false,
+      isError: false,
+      isSuccess: false,
+    };
+  }
+  const { likedPlaces } = promiseDataFromServer;
+  return mutation;
 };
 
 export default useToggleLikePlace;

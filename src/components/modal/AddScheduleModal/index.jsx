@@ -6,11 +6,12 @@ import TimeSelectModal from '@/components/modal/TimeSelectModal';
 import selectIcon from '@/assets/img/icon/dropdown.svg';
 import deleteIcon from '@/assets/img/icon/delete.svg';
 import crossIcon from '@/assets/img/icon/cross.svg';
+import { DAYS } from '@/constants/calender';
 import * as S from './style';
 
 const defaultSchedule = () => ({
-  scheduleId: uuidv4(),
-  day: '월요일',
+  id: uuidv4(),
+  day: 'Monday',
   startTime: { hour: '09', minute: '00' },
   endTime: { hour: '18', minute: '00' },
 });
@@ -103,51 +104,44 @@ const AddScheduleModal = ({ isOpen, onClose, onAdd }) => {
     closeModal();
   };
 
+  // 개별 목록 추가
   const handleAddSchedule = () => {
     setSchedules((prev) => [...prev, defaultSchedule()]);
   };
-
+  // 개별 목록 삭제
   const handleDeleteSchedule = (idx) => {
     setSchedules((prev) => prev.filter((_, i) => i !== idx));
   };
 
   // 완료 버튼 클릭 시 서버에 보낼 데이터 형식으로 가공 후 콘솔 출력
   const handleSubmit = () => {
-    // 예시: 오늘 날짜를 임시로 넣음 (실제 구현시 달력 등에서 받아야 함)
     const today = new Date();
     const getDateStr = (addDays) => {
       const d = new Date(today);
       d.setDate(today.getDate() + addDays);
       return d.toISOString().slice(0, 10);
     };
+
     // 요일별로 날짜 매핑 (실제는 서버/캘린더에서 받아야 함)
     const dayToDate = {
-      월요일: getDateStr(0),
-      화요일: getDateStr(1),
-      수요일: getDateStr(2),
-      목요일: getDateStr(3),
-      금요일: getDateStr(4),
-      토요일: getDateStr(5),
-      일요일: getDateStr(6),
+      Monday: getDateStr(0),
+      Tuesday: getDateStr(1),
+      Wednesday: getDateStr(2),
+      Thursday: getDateStr(3),
+      Friday: getDateStr(4),
+      Saturday: getDateStr(5),
+      Sunday: getDateStr(6),
     };
 
-    const fixedSchedules = schedules.map((s, idx) => ({
-      id: s.scheduleId,
-      date: dayToDate[s.day] || getDateStr(idx),
+    const fixedSchedules = schedules.map((s) => ({
+      id: s.id,
+      date: dayToDate[s.day] ?? getDateStr(0),
       day: s.day,
       startTime: `${s.startTime.hour}:${s.startTime.minute}`,
       endTime: `${s.endTime.hour}:${s.endTime.minute}`,
     }));
 
-    console.log('[AddScheduleModal] 서버에 보낼 데이터:', { fixedSchedules });
-
-    // 기존 onAdd 호출
-    onAdd(
-      schedules.map((s) => ({
-        title,
-        ...s,
-      })),
-    );
+    onAdd(fixedSchedules);
     setTitle('');
     setSchedules([defaultSchedule()]);
     onClose();
@@ -179,7 +173,7 @@ const AddScheduleModal = ({ isOpen, onClose, onAdd }) => {
               <S.TableSetting key={idx} style={{ marginBottom: 24 }}>
                 <S.DayTimeSelect>
                   <S.DaySelectButton onClick={() => openModal(idx, 'day')}>
-                    {item.day}
+                    {DAYS[item.day]}
                     <img src={selectIcon} alt="Select Day" />
                   </S.DaySelectButton>
                   <S.TimeRow>
@@ -212,6 +206,8 @@ const AddScheduleModal = ({ isOpen, onClose, onAdd }) => {
         isOpen={modalType === 'day'}
         onClose={closeModal}
         onSelect={handleDaySelect}
+        days={Object.keys(DAYS)}
+        dayLabels={DAYS}
       />
       <TimeSelectModal
         isOpen={modalType === 'start'}

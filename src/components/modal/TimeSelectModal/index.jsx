@@ -36,7 +36,6 @@ const TimeSelectModal = ({
   };
 
   const handleHourWheel = (e) => {
-    e.preventDefault();
     if (e.deltaY < 0) {
       setSelectedHour(getPrevNext(HOURS, selectedHour).prev);
     } else if (e.deltaY > 0) {
