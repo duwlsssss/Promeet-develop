@@ -10,12 +10,15 @@ import FinalPlaceMap from '@/components/promise/map/FinalPlaceMap';
 const SummaryPage = () => {
   const { promiseDataFromServer } = usePromiseDataFromServerInfo();
   const [isMapOpen, setIsMapOpen] = useState(false);
-  const time = promiseDataFromServer.fixedTime
-    .map(({ date, startTime, endTime }) => {
-      const [year, month, day] = date.split('-');
-      return `${year}년 ${parseInt(month)}월 ${parseInt(day)}일 ${startTime} ~ ${endTime}`;
-    })
-    .join('\n');
+  const time =
+    promiseDataFromServer.fixedTime.length === 0
+      ? '겹치는 시간이 없어요'
+      : promiseDataFromServer.fixedTime
+          .map(({ date, startTime, endTime }) => {
+            const [year, month, day] = date.split('-');
+            return `${year}년 ${parseInt(month)}월 ${parseInt(day)}일 ${startTime} ~ ${endTime}`;
+          })
+          .join('\n');
   const hasFixedPlace = promiseDataFromServer.fixedPlace;
   const place = hasFixedPlace
     ? `${promiseDataFromServer.fixedPlace.name}\n${promiseDataFromServer.fixedPlace.address}`

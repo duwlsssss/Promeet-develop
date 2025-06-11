@@ -9,19 +9,22 @@ const useGetPromiseData = (promiseId, userId) => {
   const { setPromiseDataFromServer } = usePromiseDataFromServerActions();
 
   return useQuery({
-    queryKey: [QUERY_KEY.promise, promiseId],
+    queryKey: [QUERY_KEY.promise, promiseId, userId],
     queryFn: async () => {
+      if (!promiseId || !userId) return null;
+
       try {
         const { data } = await getPromiseData(promiseId, userId);
         // 전역 상태에 약속 정보 저장
         setPromiseDataFromServer(data);
+
         return data;
       } catch (error) {
         handleError(error);
         throw error;
       }
     },
-    enabled: !!promiseId,
+    enabled: !!promiseId && !!userId,
   });
 };
 

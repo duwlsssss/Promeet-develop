@@ -5,7 +5,7 @@ import { usePromiseDataFromServerInfo } from '@/hooks/stores/promise/usePromiseD
 const FinalizePage = () => {
   const { promiseDataFromServer } = usePromiseDataFromServerInfo();
 
-  if (!promiseDataFromServer.isAllMemebersSubmit) {
+  if (!promiseDataFromServer.isAllMembersSubmit) {
     return <WaitingSubmit />;
   }
 

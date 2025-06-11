@@ -39,8 +39,8 @@ const PlaceCategoryMap = () => {
     }
   };
 
-  const mapLat = myLocation.position.Ma ?? DEFAULT_LAT;
-  const mapLng = myLocation.position.La ?? DEFAULT_LNG;
+  const mapLat = myLocation?.position.Ma ?? DEFAULT_LAT;
+  const mapLng = myLocation?.position.La ?? DEFAULT_LNG;
 
   return (
     <>

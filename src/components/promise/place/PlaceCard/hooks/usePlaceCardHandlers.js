@@ -37,9 +37,8 @@ export default function usePlaceCardHandlers(place, $isRetrieved) {
 
   // 위치 입력 컴포넌트에선 하트 안 보여주기
   const showHeart =
-    pathname !== ROUTES.PROMISE_CREATE_LOCATION &&
-    !pathname.includes('/promise/') &&
-    !pathname.includes('/location');
+    pathname === ROUTES.PROMISE_RESULT ||
+    (pathname.includes('/promise/') && !pathname.includes('/location'));
 
   if (!promiseDataFromServer) {
     return {
@@ -63,7 +62,7 @@ export default function usePlaceCardHandlers(place, $isRetrieved) {
 
   const handleCardClick = () => {
     setActiveBottomSheet(null);
-    map.panTo(new window.kakao.maps.LatLng(place.position.La, place.position.Ma));
+    map.panTo(new window.kakao.maps.LatLng(place.position.Ma, place.position.La));
     setActiveMarkerId(place.placeId);
   };
 

@@ -42,7 +42,7 @@ const useSignIn = (setError) => {
         return;
       }
 
-      // 기타 에러
+      // 기타 에러는 여기서 처리
       handleError(error);
     },
   });

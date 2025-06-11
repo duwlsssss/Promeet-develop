@@ -55,7 +55,7 @@ const MarkerManager = ({ markers, routes }) => {
 
     // 1. 장소 마커 생성
     markers.forEach((markerData) => {
-      console.log(markerData);
+      // console.log(markerData);
       if (markerData.placeId === MY_LOC_MARKER_ID) return; // 내 위치 마커는 별도 처리
 
       const position = new window.kakao.maps.LatLng(markerData.position.Ma, markerData.position.La);
@@ -83,6 +83,9 @@ const MarkerManager = ({ markers, routes }) => {
 
     // 2. 경로 마커 생성
     if (routes) {
+      // 도착역 (중간역)
+      const routeLength = routes[0].route.length;
+      const lastStation = routes[0].route[routeLength - 1].station;
       routes.forEach((userRoute, index) => {
         // polyline
         const path = userRoute.route.map(
@@ -102,7 +105,8 @@ const MarkerManager = ({ markers, routes }) => {
 
         // 사용자 정보 오버레이
         const firstStation = userRoute.route[0].station;
-        const totalDuration = userRoute.route.reduce((acc, curr) => acc + curr.duration, 0);
+        // const totalDuration = userRoute.time;
+        const totalDuration = userRoute.route.reduce((acc, r) => acc + r.duration, 0);
 
         const userOverlay = new window.kakao.maps.CustomOverlay({
           content: `
@@ -125,8 +129,7 @@ const MarkerManager = ({ markers, routes }) => {
         userOverlay.setMap(map);
         markersRef.current.push(userOverlay);
 
-        // 도착역
-        const lastStation = userRoute.route[userRoute.route.length - 1].station;
+        // 도착역 (중간역)
         const stationPosition = new window.kakao.maps.LatLng(
           lastStation.position.Ma,
           lastStation.position.La,

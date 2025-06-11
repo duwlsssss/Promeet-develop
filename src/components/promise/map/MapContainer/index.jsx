@@ -22,10 +22,6 @@ const MapContainer = ({ children, lat, lng }) => {
 
       const map = new window.kakao.maps.Map(mapRef.current, options);
       setMap(map);
-
-      return () => {
-        setMap(null);
-      };
     } catch (error) {
       console.error('지도 생성 실패:', error);
     }

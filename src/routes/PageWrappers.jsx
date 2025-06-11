@@ -39,6 +39,7 @@ export const CreateOnlyWrapper = ({ children }) => {
   const { setUserType } = useUserActions();
 
   useEffect(() => {
+    console.log(isPending, promiseDataFromServer);
     if (!isPending && promiseDataFromServer) {
       const isCreator = promiseDataFromServer.creatorId === userId;
       if (!isCreator) {
@@ -74,6 +75,7 @@ export const JoinOnlyWrapper = ({ children }) => {
   const { hasNearestSubwayStationData } = usePromiseDataActions();
 
   useEffect(() => {
+    console.log(isUserDataPending, isPromiseDataPending);
     if (!isUserDataPending && !isPromiseDataPending) {
       // 초대받은 사람 체크
       const isInvitedMember = promises.join.includes(promiseId);
@@ -112,8 +114,8 @@ export const JoinOnlyWrapper = ({ children }) => {
   }, [
     promiseDataFromServer,
     promises,
-    isUserDataPending,
     isPromiseDataPending,
+    isUserDataPending,
     userId,
     pathname,
     promiseId,
@@ -122,7 +124,7 @@ export const JoinOnlyWrapper = ({ children }) => {
     hasNearestSubwayStationData,
   ]);
 
-  if (isUserDataPending || isPromiseDataPending) {
+  if (isPromiseDataPending) {
     return <DeferredLoader />;
   }
 
@@ -144,10 +146,13 @@ export const PromiseMemberWrapper = ({ children }) => {
   useEffect(() => {
     if (!isPending && promiseDataFromServer) {
       // 약속 멤버 체크
-      const isMember = promiseDataFromServer.members.some((member) => member.userId === userId);
+      const isMember =
+        promiseDataFromServer.members.some((member) => member.userId === userId) ||
+        userId === promiseDataFromServer.creatorId;
 
+      console.log('isMember', isMember);
       // 멤버가 아니거나 확정 불가능한 경우 홈으로 이동
-      if (!isMember || !promiseDataFromServer.canFix) {
+      if (!isMember) {
         navigate(ROUTES.HOME);
       }
     }

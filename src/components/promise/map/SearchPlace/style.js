@@ -22,6 +22,7 @@ export const NextBtnContainer = styled.div`
 
   width: 100%;
   height: var(--next-btn-container-height);
+  padding: 10px;
 
   background-color: ${theme.color.white};
 `;

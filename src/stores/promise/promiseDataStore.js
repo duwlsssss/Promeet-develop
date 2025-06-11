@@ -82,7 +82,7 @@ const promiseDataStore = create()(
           memberCnt: state.memberCnt,
           availableTimes: state.availableTimes,
           nearestSubwayStation: state.nearestSubwayStation,
-          selectedPlace: null,
+          selectedPlace: state.selectedPlace,
         }),
       },
     ),
