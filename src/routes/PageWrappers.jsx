@@ -6,6 +6,7 @@ import { useUserInfo, useUserActions } from '@/hooks/stores/auth/useUserStore';
 import { usePromiseDataActions } from '@/hooks/stores/promise/usePromiseDataStore';
 import { usePromiseDataFromServerInfo } from '@/hooks/stores/promise/usePromiseDataFromServerStore';
 import useGetPromiseData from '@/hooks/queries/useGetPromiseData';
+import useGetUserData from '@/hooks/queries/useGetUserData';
 import DeferredLoader from '@/components/ui/DeferredLoader';
 
 // 로그인 안됐을 때 페이지 보호
@@ -61,21 +62,21 @@ CreateOnlyWrapper.propTypes = {
 
 // 참여 요청 받은 사람만 접근 가능
 export const JoinOnlyWrapper = ({ children }) => {
-  const { userId } = useUserInfo();
   const navigate = useNavigate();
   const { promiseId } = useParams();
   const { pathname } = useLocation();
+  const { userId, promises } = useUserInfo();
+
+  const { isPending: isUserDataPending } = useGetUserData(userId);
+  const { isPending: isPromiseDataPending } = useGetPromiseData(promiseId, userId);
   const { setUserType } = useUserActions();
-  const { isPending } = useGetPromiseData(promiseId, userId);
   const { promiseDataFromServer } = usePromiseDataFromServerInfo();
   const { hasNearestSubwayStationData } = usePromiseDataActions();
 
   useEffect(() => {
-    if (!isPending && promiseDataFromServer) {
-      // 초대받은 사람 체크 (생성자가 아니면서 members에 있는 경우)
-      const isInvitedMember = promiseDataFromServer.members.some(
-        (member) => member.userId === userId && member.userId !== promiseDataFromServer.creatorId,
-      );
+    if (!isUserDataPending && !isPromiseDataPending) {
+      // 초대받은 사람 체크
+      const isInvitedMember = promises.join.includes(promiseId);
 
       // 참여 권한 없음 → 홈으로 이동
       if (!isInvitedMember) {
@@ -110,7 +111,9 @@ export const JoinOnlyWrapper = ({ children }) => {
     }
   }, [
     promiseDataFromServer,
-    isPending,
+    promises,
+    isUserDataPending,
+    isPromiseDataPending,
     userId,
     pathname,
     promiseId,
@@ -119,7 +122,7 @@ export const JoinOnlyWrapper = ({ children }) => {
     hasNearestSubwayStationData,
   ]);
 
-  if (isPending) {
+  if (isUserDataPending || isPromiseDataPending) {
     return <DeferredLoader />;
   }
 
@@ -140,23 +143,17 @@ export const PromiseMemberWrapper = ({ children }) => {
 
   useEffect(() => {
     if (!isPending && promiseDataFromServer) {
-      // 약속 멤버 체크
+      // 약속 멤버 체크 - 여기서 제출 체크도 됨
       const isMember = promiseDataFromServer.members.some((member) => member.userId === userId);
       if (!isMember) {
         navigate(ROUTES.HOME);
-        return;
       }
-
-      // 약속 상태 체크
-      if (promiseDataFromServer && !promiseDataFromServer.isFixed) {
-        // 홈 페이지로 리다이렉트
-        navigate(ROUTES.HOME);
-      }
-    }
-    if (isPending) {
-      return <DeferredLoader />;
     }
   }, [promiseDataFromServer, isPending, userId, promiseId, navigate]);
+
+  if (isPending) {
+    return <DeferredLoader />;
+  }
 
   return children;
 };

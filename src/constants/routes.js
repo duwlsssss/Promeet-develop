@@ -17,6 +17,7 @@ export const ROUTES = {
 
   // 공통
   PROMISE_SUMMARY: '/promise/:promiseId/summary', // 약속 확정 후 요약 정보
+  PROMISE_MAP: '/promise/:promiseId/map', // 위치 정보
 
   // 유저
   USER: 'user',
@@ -32,4 +33,5 @@ export const BUILD_ROUTES = {
   PROMISE_RESULT: (id) => `/promise/${id}/result`,
   PROMISE_FINALIZE: (id) => `/promise/${id}/finalize`,
   PROMISE_SUMMARY: (id) => `/promise/${id}/summary`,
+  PROMISE_MAP: (id) => `/promise/${id}/map`,
 };

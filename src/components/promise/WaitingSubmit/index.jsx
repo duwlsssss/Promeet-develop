@@ -21,11 +21,11 @@ const WaitingSubmit = () => {
         </S.StatusWrapper>
         <S.StatusWrapper>
           <S.PeopleIcon />
+          {/* 입력 완료한 멤버들 (생성자 포함) */}
           <S.MemberList>
             {promiseDataFromServer.members.map((member) => (
               <S.MemberItem key={member.userId}>
                 <p>{member.name}</p>
-                {member.hasSubmittedData && '✅'}
               </S.MemberItem>
             ))}
           </S.MemberList>

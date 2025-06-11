@@ -71,7 +71,7 @@ const HomePage = () => {
   const createdPromises = createQueries.map((q) => q.data).filter(Boolean);
   const joinedPromises = joinQueries.map((q) => q.data).filter(Boolean);
 
-  // console.log(createIds);
+  console.log('참여 요청받은 약속', joinIds, '생성한 약속', createIds);
 
   const allPromises = [...createdPromises, ...joinedPromises]; // 생성 + 초대
   const { todayPromises, futurePromises } = classifyPromises(allPromises);

@@ -8,7 +8,7 @@ import copyToClipboard from '@/utils/copyToClipBoard';
 const ShareLinkModal = ({ isOpen, shareLink, onClose }) => {
   const handleCopyLinkBtnClick = () => {
     copyToClipboard(shareLink);
-    toast('주소가 복사되었습니다');
+    toast('약속 링크가 복사됐어요');
     onClose();
   };
   return (

@@ -51,7 +51,7 @@ export const StatusContainer = styled.div`
 
 export const StatusWrapper = styled.div`
   display: flex;
-  gap: 10px;
+  gap: 15px;
   align-items: center;
   font-size: 18px;
 `;

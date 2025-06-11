@@ -27,6 +27,7 @@ import ResultPage from '../pages/promise/[id]/result';
 import FinalizePage from '../pages/promise/[id]/finalize';
 
 import SummaryPage from '../pages/promise/[id]/summary';
+import PromiseMapPage from '../pages/promise/[id]/map';
 
 import UserPage from '../pages/user/index';
 import EnterSchedulePage from '../pages/user/enter-schedule';
@@ -121,6 +122,14 @@ const privateRoutes = [
     element: (
       <PromiseMemberWrapper>
         <SummaryPage />
+      </PromiseMemberWrapper>
+    ),
+  },
+  {
+    path: ROUTES.PROMISE_MAP,
+    element: (
+      <PromiseMemberWrapper>
+        <PromiseMapPage />
       </PromiseMemberWrapper>
     ),
   },

@@ -5,4 +5,5 @@ export const MapDiv = styled.div`
   width: 100vw;
   height: 100%;
   margin-left: calc(0px - var(--outlet-padding));
+  background-color: red;
 `;

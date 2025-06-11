@@ -2,7 +2,7 @@ import { useMutation } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import useErrorHandler from '../useHandleError';
 import { useUserActions } from '../stores/auth/useUserStore';
-import { ROUTES } from '@/constants/routes';
+import { BUILD_ROUTES, ROUTES } from '@/constants/routes';
 import { postSignIn } from '@/apis/post/auth';
 import { getUserData } from '@/apis/get/user';
 
@@ -29,9 +29,10 @@ const useSignIn = (setError) => {
       });
 
       // 참여 요청받은 약속이면
+      console.log(promiseId && promises.join.includes(promiseId));
       if (promiseId && promises.join.includes(promiseId)) {
         setUserType('join');
-        navigate(ROUTES.PROMISE_LOCATION);
+        navigate(BUILD_ROUTES.PROMISE_LOCATION(promiseId));
       } else {
         navigate(ROUTES.HOME);
       }

@@ -17,18 +17,30 @@ import { DEFAULT_SUBWAY_STATION } from '@/constants/promise';
 import { ROUTES } from '@/constants/routes';
 import { MAP_BS_ID } from '@/constants/map';
 
-const getButtonText = (userType, canFix) => {
-  const texts = {
+const getDescText = (userType, canFix) => {
+  const descTexts = {
     create: {
-      true: '약속 장소를 선택했어요',
-      false: '참여자들이 하나 이상의 장소를 좋아요 해야해요',
+      true: '약속 장소를 선택해주세요',
+      false: '모든 사용자가 좋아요를 입력해야해요',
+    },
+    join: {
+      true: '하나 이상의 장소를 좋아요하세요',
+      false: '하나 이상의 장소를 좋아요하세요',
+    },
+  };
+  return descTexts[userType][canFix];
+};
+
+const getBtnText = (userType) => {
+  const btnTexts = {
+    create: {
+      true: '이 장소로 할게요',
     },
     join: {
       true: '약속 정보 보기',
-      false: '약속 확정 대기 중',
     },
   };
-  return texts[userType][canFix];
+  return btnTexts[userType];
 };
 
 const SearchPlace = ({ category }) => {
@@ -133,7 +145,9 @@ const SearchPlace = ({ category }) => {
     return isLikeList ? mergedLikedPlaces : mergedNearbyPlaces;
   }, [isLikeList, mergedLikedPlaces, mergedNearbyPlaces, isLoading]);
 
-  const buttonText = getButtonText(userType, canFix);
+  const descText = getDescText(userType, canFix);
+  const btnText = getBtnText(userType);
+
   const handleNextBtnClick = () => {
     navigate(ROUTES.PROMISE_SUMMARY);
   };
@@ -152,9 +166,9 @@ const SearchPlace = ({ category }) => {
         </S.ListContainer>
       </BottomSheet>
       <S.NextBtnContainer>
-        <S.Descriptrtion>원하는 장소를 선택해주세요</S.Descriptrtion>
+        <S.Descriptrtion>{descText}</S.Descriptrtion>
         <Button onClick={handleNextBtnClick} disabled={!canFix}>
-          {buttonText}
+          {btnText}
         </Button>
       </S.NextBtnContainer>
     </>
