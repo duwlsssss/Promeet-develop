@@ -19,7 +19,7 @@ export const ROUTES = {
   PROMISE_SUMMARY: '/promise/:promiseId/summary', // 약속 확정 후 요약 정보
 
   // 유저
-  USER: 'user',
+  USER: '/user',
   ENTER_SCHEDULE: '/user/enter-schedule',
   NOT_FOUND: '*',
 };
