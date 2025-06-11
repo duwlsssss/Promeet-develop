@@ -81,8 +81,6 @@ const JoinSchedulePage = () => {
       });
     });
 
-    console.log('flatAvailableTimes', flatAvailableTimes);
-
     // 서버로 전송
     joinPromise({
       promiseId,

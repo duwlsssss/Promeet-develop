@@ -13,18 +13,18 @@ import useGetUserData from '@/hooks/queries/useGetUserData';
 import useFinalizePromise from '@/hooks/mutations/useFinalizePromise';
 import { BUILD_ROUTES } from '@/constants/routes';
 
-const getDescText = (userType, canFix, isFinalizePending) => {
+const getDescText = (userType, btnDisabled, isFinalizePending) => {
   const descTexts = {
     create: {
-      true: isFinalizePending ? '약속 확정 중' : '약속 장소를 선택해주세요',
-      false: '모든 사용자가 좋아요를 입력해야해요',
+      true: '모든 사용자가 좋아요를 입력해야해요',
+      false: isFinalizePending ? '약속 확정 중' : '약속 장소를 선택해주세요',
     },
     join: {
       true: '하나 이상의 장소를 좋아요하세요',
       false: '하나 이상의 장소를 좋아요하세요',
     },
   };
-  return descTexts[userType][canFix];
+  return descTexts[userType][btnDisabled];
 };
 
 const getBtnText = (userType) => {
@@ -145,7 +145,7 @@ const useSearchPlace = (category) => {
   const { userId, promises } = useUserInfo();
   const { selectedPlace } = usePromiseDataInfo();
   const { promiseDataFromServer } = usePromiseDataFromServerInfo();
-  const { likedPlaces, midpoint, members, canFix } = promiseDataFromServer;
+  const { likedPlaces, midpoint, members, memberCnt } = promiseDataFromServer;
   const { mutate: finalizePromise, isPending: isFinalizePending } = useFinalizePromise();
 
   const { promiseId } = useParams();
@@ -153,6 +153,18 @@ const useSearchPlace = (category) => {
   const { isPending: isUserDataPending } = useGetUserData(userId);
   const isInvitedMember = promises.join.includes(promiseId);
   const userType = isInvitedMember ? 'join' : 'create';
+
+  // 버튼 비활성화 조건
+  const btnDisabled = useMemo(() => {
+    if (userType === 'create') {
+      // 생성자는 좋아요를 누른 멤버 수가 전체 멤버 수보다 1명 적을 때까지 버튼 비활성화
+      return memberCnt - 1 > likedPlaces.length;
+    }
+    // 참여자는 자신이 좋아요를 눌렀을 때만 버튼 활성화
+    else if (userType === 'join') {
+      return !likedPlaces?.some((place) => place.userIds.includes(userId));
+    }
+  }, [userType, memberCnt, likedPlaces, userId]);
 
   // Places 서비스 초기화
   const ps = useMemo(() => {
@@ -249,7 +261,6 @@ const useSearchPlace = (category) => {
   }, [isLikeList, mergedLikedPlaces, mergedNearbyPlaces, isLoading]);
 
   const handleNextBtnClick = () => {
-    console.log('handleNextBtnClick', selectedPlace);
     if (userType === 'create' && selectedPlace) {
       const place = {
         placeId: selectedPlace.placeId,
@@ -270,18 +281,15 @@ const useSearchPlace = (category) => {
   };
 
   return {
-    descText: getDescText(userType, canFix, isFinalizePending),
+    descText: getDescText(userType, btnDisabled, isFinalizePending),
     btnText: getBtnText(userType),
+    btnDisabled,
     places,
     routes,
     myLocation,
     isLoading,
-    likedPlaces,
     isLikeList,
-    canFix,
-    userType,
     handleNextBtnClick,
-    userId,
     isUserDataPending,
   };
 };

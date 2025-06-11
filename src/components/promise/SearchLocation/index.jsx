@@ -80,7 +80,6 @@ const SearchLocation = ({ onBack }) => {
         position: new window.kakao.maps.LatLng(place.y, place.x),
       }));
       setPlaces(places);
-      // console.log('places', places);
     } else if (status === window.kakao.maps.services.Status.ZERO_RESULT) {
       setPlaces([]);
     } else if (status === window.kakao.maps.services.Status.ERROR) {

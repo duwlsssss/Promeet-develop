@@ -65,7 +65,6 @@ const HomePage = () => {
   const handleDragStart = (e) => {
     startX.current = e.type === 'touchstart' ? e.touches[0].clientX : e.clientX;
   };
-
   // 드래그 끝
   const handleDragEnd = (e) => {
     if (startX.current === null) return;

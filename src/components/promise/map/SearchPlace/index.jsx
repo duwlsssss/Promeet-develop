@@ -8,31 +8,19 @@ import Button from '@/components/ui/Button';
 import useSearchPlace from './hooks/useSearchPlace';
 import { CATEGORY } from '@/constants/place';
 import { MAP_BS_ID } from '@/constants/map';
-import { useMemo } from 'react';
 
 const SearchPlace = ({ category }) => {
   const {
     descText,
     btnText,
+    btnDisabled,
     places,
     // routes,
     myLocation,
-    likedPlaces,
     isLoading,
     isLikeList,
-    canFix,
-    userType,
     handleNextBtnClick,
-    userId,
   } = useSearchPlace(category);
-
-  // 사용자가 좋아요를 눌렀는지 확인
-  const hasLikedPlace = useMemo(() => {
-    if (!likedPlaces) return false;
-    return likedPlaces.some((place) => place.userIds.includes(userId));
-  }, [likedPlaces, userId]);
-
-  const btnDisabled = userType === 'create' ? !canFix : !hasLikedPlace; // 참여자는 좋아요를 눌러야 버튼 활성화
 
   const routes = [
     {

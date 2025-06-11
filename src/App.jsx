@@ -6,7 +6,7 @@ import './styles/fonts.css';
 // 비동기 통신
 import { QueryClientProvider, QueryErrorResetBoundary } from '@tanstack/react-query';
 import queryClient from './lib/tanstack-query/queryClient';
-import { ReactQueryDevtoolsPanel } from '@tanstack/react-query-devtools'; // 디버깅용
+// import { ReactQueryDevtoolsPanel } from '@tanstack/react-query-devtools'; // 디버깅용
 // 에러 처리
 import { ErrorBoundary } from 'react-error-boundary';
 // 라우팅
@@ -35,7 +35,7 @@ const loadKakaoMapScript = () => {
 };
 
 function App() {
-  const [isOpen, setIsOpen] = useState(false); // ReactQueryDevtoolsPanel 열고닫기
+  // const [isOpen, setIsOpen] = useState(false); // ReactQueryDevtoolsPanel 열고닫기
   const { setIsKakaoLoaded } = useMapActions();
   const [isKakaoReady, setIsKakaoReady] = useState(false);
 
@@ -71,12 +71,12 @@ function App() {
             </ErrorBoundary>
           )}
         </QueryErrorResetBoundary>
-        <button
+        {/* <button
           onClick={() => setIsOpen(!isOpen)}
         >{`${isOpen ? 'Close' : 'Open'} the devtools panel`}</button>
         {isOpen && (
           <ReactQueryDevtoolsPanel style={{ height: '200px' }} onClose={() => setIsOpen(false)} />
-        )}
+        )} */}
       </QueryClientProvider>
     </ThemeProvider>
   );

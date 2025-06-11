@@ -9,7 +9,7 @@ const designTokens = css`
   --outlet-padding: 30px;
   --place-category-tab-height: 65px;
   --bs-header-height: 50px;
-  --next-btn-container-height: 100px;
+  --next-btn-container-height: 110px;
 `;
 
 export default designTokens;

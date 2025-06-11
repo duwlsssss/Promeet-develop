@@ -6,6 +6,7 @@ import { PROMISE_JOIN_HEADER_TEXT } from '@/constants/promise';
 import copyToClipboard from '@/utils/copyToClipBoard';
 import toast from '@/utils/toast';
 import FinalPlaceMap from '@/components/promise/map/FinalPlaceMap';
+import { ROUTES } from '@/constants/routes';
 
 const SummaryPage = () => {
   const { promiseDataFromServer } = usePromiseDataFromServerInfo();
@@ -24,6 +25,8 @@ const SummaryPage = () => {
     ? `${promiseDataFromServer.fixedPlace.name}\n${promiseDataFromServer.fixedPlace.address}`
     : '약속 생성자가 곧 확정할 거예요';
 
+  const placeForMap = promiseDataFromServer.fixedPlace;
+
   const handleCopyClick = () => {
     copyToClipboard(promiseDataFromServer.fixedPlace.address);
     toast('주소가 복사됐어요');
@@ -35,7 +38,7 @@ const SummaryPage = () => {
 
   return (
     <S.Container>
-      <Header text={PROMISE_JOIN_HEADER_TEXT} />
+      <Header text={PROMISE_JOIN_HEADER_TEXT} navigateUrl={ROUTES.HOME} />
       <S.InfoConainer>
         <S.Name>{promiseDataFromServer.title}</S.Name>
         <S.Description>{promiseDataFromServer.description}</S.Description>
@@ -67,7 +70,7 @@ const SummaryPage = () => {
       </S.StatusContainer>
       {isMapOpen ? (
         <S.MapSection>
-          <FinalPlaceMap place={place} />
+          <FinalPlaceMap place={placeForMap} />
         </S.MapSection>
       ) : null}
     </S.Container>

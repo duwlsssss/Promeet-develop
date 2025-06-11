@@ -37,13 +37,13 @@ const useSignIn = (setError) => {
       }
     },
     onError: (error) => {
-      if (error.code === 'INVALID_PASSWORD') {
-        setError('password', { message: error.message });
-        return;
+      if (error.response.data.error.code !== 'INVALID_PASSWORD') {
+        // 다른 에러는 일반적인 에러 처리
+        handleError(error);
       }
 
-      // 기타 에러는 여기서 처리
-      handleError(error);
+      // 비밀번호 에러는 폼에만 표시
+      setError('password', { message: error.response.data.error.message });
     },
   });
 };

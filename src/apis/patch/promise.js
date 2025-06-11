@@ -11,7 +11,6 @@ export const patchJoinPromise = async (promiseId, userId, nearestStation, availa
 
 // 약속 확정 (최종 장소 선택해서)
 export const patchFinalizePromise = async (promiseId, userId, place) => {
-  console.log('place', place);
   const { data } = await axiosInstance.patch(`/promises/${promiseId}/finalize`, {
     userId,
     place,
