@@ -6,6 +6,7 @@ export const Container = styled.section`
   display: flex;
   flex-direction: column;
   gap: 20px;
+  padding-bottom: 30px;
 `;
 
 export const Slide = styled(motion.div)`
@@ -18,4 +19,8 @@ export const Slide = styled(motion.div)`
   height: 100%;
 
   background: ${theme.color.white};
+`;
+
+export const BtnWrapper = styled.div`
+  margin-top: auto;
 `;

@@ -20,14 +20,14 @@ import DatePage from '../pages/promise/create/date';
 import LocationPage from '../pages/promise/create/location';
 import SchedulePage from '../pages/promise/create/schedule';
 
+import FinalizePage from '../pages/promise/[id]/finalize';
+
 import JoinPage from '../pages/promise/[id]/join';
 import JoinLocationPage from '../pages/promise/[id]/location';
 import JoinSchedulePage from '../pages/promise/[id]/schedule';
-import ResultPage from '../pages/promise/[id]/result';
-import FinalizePage from '../pages/promise/[id]/finalize';
+import JoinResultPage from '../pages/promise/[id]/result';
 
 import SummaryPage from '../pages/promise/[id]/summary';
-import PromiseMapPage from '../pages/promise/[id]/map';
 
 import UserPage from '../pages/user/index';
 import EnterSchedulePage from '../pages/user/enter-schedule';
@@ -112,7 +112,7 @@ const privateRoutes = [
     path: ROUTES.PROMISE_RESULT,
     element: (
       <JoinOnlyWrapper>
-        <ResultPage />
+        <JoinResultPage />
       </JoinOnlyWrapper>
     ),
   },
@@ -122,14 +122,6 @@ const privateRoutes = [
     element: (
       <PromiseMemberWrapper>
         <SummaryPage />
-      </PromiseMemberWrapper>
-    ),
-  },
-  {
-    path: ROUTES.PROMISE_MAP,
-    element: (
-      <PromiseMemberWrapper>
-        <PromiseMapPage />
       </PromiseMemberWrapper>
     ),
   },

@@ -1,16 +1,14 @@
 import * as S from './style';
 import { useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
 import Header from '@/components/promise/Header';
 import Input from '@/components/ui/Input';
+import Button from '@/components/ui/Button';
 import SearchLocation from '@/components/promise/SearchLocation';
 import { PROMISE_JOIN_HEADER_TEXT } from '@/constants/promise';
 import { ROUTES, BUILD_ROUTES } from '@/constants/routes';
-import {
-  usePromiseDataActions,
-  usePromiseDataInfo,
-} from '@/hooks/stores/promise/usePromiseDataStore';
+import { usePromiseDataInfo } from '@/hooks/stores/promise/usePromiseDataStore';
 
 const slideVariants = {
   initial: { x: '100%' },
@@ -20,30 +18,31 @@ const slideVariants = {
 };
 
 const JoinLocationPage = () => {
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
   const { promiseId } = useParams();
   const navigate = useNavigate();
-  const [isSearchOpen, setIsSearchOpen] = useState(false);
+
   const { nearestSubwayStation } = usePromiseDataInfo();
-  const { setNearestSubwayStation } = usePromiseDataActions();
 
   const openSearch = () => setIsSearchOpen(true);
   const closeSearch = () => setIsSearchOpen(false);
 
-  const handleLocationSelect = (station) => {
-    setNearestSubwayStation(station);
-    navigate(BUILD_ROUTES.PROMISE_SCHEDULE(promiseId));
+  const handleNextBtn = () => {
+    if (nearestSubwayStation.name) {
+      navigate(BUILD_ROUTES.PROMISE_SCHEDULE(promiseId));
+    }
   };
 
   return (
     <S.Container>
       <Header text={PROMISE_JOIN_HEADER_TEXT} navigateUrl={ROUTES.HOME} />
       <Input
-        label="내 출발 위치"
+        label="내 출발 위치 (가까운 역이 입력돼요)"
         placeholder="출발 위치를 입력해주세요"
         onClick={openSearch}
         readOnly
-        value={nearestSubwayStation?.name ?? ''}
         style={{ cursor: 'pointer' }}
+        value={nearestSubwayStation?.name ?? ''}
       />
 
       <AnimatePresence>
@@ -55,10 +54,15 @@ const JoinLocationPage = () => {
             exit="exit"
             transition={slideVariants.transition}
           >
-            <SearchLocation onBack={closeSearch} onSelect={handleLocationSelect} />
+            <SearchLocation onBack={closeSearch} />
           </S.Slide>
         )}
       </AnimatePresence>
+      <S.BtnWrapper>
+        <Button onClick={handleNextBtn} disabled={!nearestSubwayStation?.name}>
+          다음
+        </Button>
+      </S.BtnWrapper>
     </S.Container>
   );
 };

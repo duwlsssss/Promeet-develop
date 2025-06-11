@@ -1,27 +1,23 @@
 import * as S from './style';
 import { useRef } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
 import Header from '@/components/promise/Header';
 import Button from '@/components/ui/Button';
 import AbleTimeTable from '@/components/timeTable/AbleTimeTable';
-import DeferredLoader from '@/components/ui/DeferredLoader';
 import { useUserInfo } from '@/hooks/stores/auth/useUserStore';
 import {
   usePromiseDataInfo,
   usePromiseDataActions,
 } from '@/hooks/stores/promise/usePromiseDataStore';
-import useGetUserData from '@/hooks/queries/useGetUserData';
 import useJoinPromise from '@/hooks/mutations/useJoinPromise';
 import { usePromiseDataFromServerInfo } from '@/hooks/stores/promise/usePromiseDataFromServerStore';
 import { PROMISE_CREATE_HEADER_TEXT } from '@/constants/promise';
 import { BUILD_ROUTES } from '@/constants/routes';
 
 const JoinSchedulePage = () => {
-  const navigate = useNavigate();
   const { promiseId } = useParams();
-  const { userId, fixedSchedules } = useUserInfo();
-  const { isPending: isGetUserDataPending } = useGetUserData(userId);
+  const { fixedSchedules } = useUserInfo();
 
   // 폼 제출 위해 가져옴
   const { nearestSubwayStation } = usePromiseDataInfo();
@@ -32,12 +28,8 @@ const JoinSchedulePage = () => {
 
   const { mutateAsync: joinPromise, isPending: isJoinPending } = useJoinPromise();
 
-  if (isGetUserDataPending || !promiseDataFromServer) {
-    return <DeferredLoader />;
-  }
-
   // 생성자가 설정한 날짜만 가져오기
-  const creator = promiseDataFromServer.members.find(
+  const creator = promiseDataFromServer?.members.find(
     (member) => member.userId === promiseDataFromServer.creatorId,
   );
 
@@ -48,6 +40,15 @@ const JoinSchedulePage = () => {
       day,
       timeRanges: [],
     })) ?? [];
+
+  const hasSelectedTime = () => {
+    if (!selectedRef.current) return false;
+
+    // 2차원 배열을 순회하면서 하나라도 true가 있으면 선택된 것
+    return selectedRef.current.some((hourArr) =>
+      hourArr.some((dayArr) => dayArr.some((selected) => selected)),
+    );
+  };
 
   const handleJoinPromiseBtnClick = async () => {
     // 날짜별로 여러 구간을 각각 객체로 변환
@@ -65,6 +66,8 @@ const JoinSchedulePage = () => {
       });
     });
 
+    console.log('newAvailableTimes', newAvailableTimes);
+
     joinPromise({
       promiseId,
       nearestStation: nearestSubwayStation,
@@ -73,9 +76,6 @@ const JoinSchedulePage = () => {
 
     // 제출용으로 저장했던 데이터 삭제
     resetPromiseData();
-
-    // 결과 페이지로 이동
-    navigate(BUILD_ROUTES.PROMISE_RESULT(promiseId));
   };
 
   // 시간 인덱스를 "HH:MM" 문자열로 변환
@@ -140,34 +140,26 @@ const JoinSchedulePage = () => {
   };
 
   return (
-    <>
-      {isGetUserDataPending ? (
-        <DeferredLoader />
-      ) : (
-        <>
-          <S.Container>
-            <Header
-              text={PROMISE_CREATE_HEADER_TEXT}
-              navigateUrl={BUILD_ROUTES.PROMISE_LOCATION(promiseId)}
-            />
-            <S.TableScrollWrapper>
-              <S.TableInnerWrapper>
-                <AbleTimeTable
-                  days={availableTimes}
-                  onChange={handleTimeTableChange}
-                  fixedSchedules={fixedSchedules}
-                />
-              </S.TableInnerWrapper>
-            </S.TableScrollWrapper>
-            <S.BtnWrapper>
-              <Button onClick={handleJoinPromiseBtnClick} disabled={isJoinPending}>
-                {isJoinPending ? '약속 참여 중...' : '약속 참여'}
-              </Button>
-            </S.BtnWrapper>
-          </S.Container>
-        </>
-      )}
-    </>
+    <S.Container>
+      <Header
+        text={PROMISE_CREATE_HEADER_TEXT}
+        navigateUrl={BUILD_ROUTES.PROMISE_LOCATION(promiseId)}
+      />
+      <S.TableScrollWrapper>
+        <S.TableInnerWrapper>
+          <AbleTimeTable
+            days={availableTimes}
+            onChange={handleTimeTableChange}
+            fixedSchedules={fixedSchedules}
+          />
+        </S.TableInnerWrapper>
+      </S.TableScrollWrapper>
+      <S.BtnWrapper>
+        <Button onClick={handleJoinPromiseBtnClick} disabled={isJoinPending || !hasSelectedTime()}>
+          {isJoinPending ? '약속 참여 중...' : '약속 참여'}
+        </Button>
+      </S.BtnWrapper>
+    </S.Container>
   );
 };
 export default JoinSchedulePage;

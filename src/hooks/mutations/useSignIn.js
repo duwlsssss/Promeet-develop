@@ -29,7 +29,6 @@ const useSignIn = (setError) => {
       });
 
       // 참여 요청받은 약속이면
-      console.log(promiseId && promises.join.includes(promiseId));
       if (promiseId && promises.join.includes(promiseId)) {
         setUserType('join');
         navigate(BUILD_ROUTES.PROMISE_LOCATION(promiseId));

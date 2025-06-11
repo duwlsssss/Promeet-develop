@@ -15,7 +15,6 @@ const DatePage = () => {
 
   const handleDateRangeChange = (range) => {
     setSelectedRange(range);
-    console.log('selectedRange:', range);
   };
 
   const handleSaveDates = () => {
@@ -54,7 +53,9 @@ const DatePage = () => {
   return (
     <S.Container>
       <Header text={PROMISE_CREATE_HEADER_TEXT} navigateUrl={ROUTES.PROMISE_CREATE_INFO} />
-      <CalendarRange onChange={handleDateRangeChange} value={selectedRange} />
+      <S.CalendarWrapper>
+        <CalendarRange onChange={handleDateRangeChange} value={selectedRange} />
+      </S.CalendarWrapper>
       <S.BtnWrapper>
         <Button
           onClick={handleSaveDates}

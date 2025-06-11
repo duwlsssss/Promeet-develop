@@ -10,6 +10,7 @@ export const Container = styled.section`
   display: flex;
   flex-direction: column;
   gap: 30px;
+  padding-bottom: 30px;
 `;
 
 export const WatingText = styled.h1`
@@ -77,9 +78,11 @@ export const PeopleIcon = styled(PeopleSVG)`
 `;
 export const CopyIcon = styled(CopySVG)`
   ${IconStyle}
+  cursor: pointer;
 `;
 export const MapIcon = styled(MapSVG)`
   ${IconStyle}
+  cursor: pointer;
 `;
 
 export const MemberList = styled.div`
@@ -87,7 +90,10 @@ export const MemberList = styled.div`
   gap: 10px;
 `;
 
-export const MemberItem = styled.span`
-  display: flex;
-  gap: 2px;
+export const MapSection = styled.div`
+  flex: 1;
+  width: 100%;
+  height: 300px;
+
+  /* background-color: red; */
 `;

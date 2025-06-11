@@ -75,8 +75,3 @@ export const MemberList = styled.div`
   display: flex;
   gap: 10px;
 `;
-
-export const MemberItem = styled.span`
-  display: flex;
-  gap: 2px;
-`;

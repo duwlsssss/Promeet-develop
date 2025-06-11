@@ -7,7 +7,7 @@ import useErrorHandler from '../useHandleError';
 import { BUILD_ROUTES } from '@/constants/routes';
 import { QUERY_KEY } from '@/constants/key';
 
-export const useFinalizePromise = () => {
+const useFinalizePromise = () => {
   const handleError = useErrorHandler();
   const navigate = useNavigate();
 
@@ -28,3 +28,5 @@ export const useFinalizePromise = () => {
     },
   });
 };
+
+export default useFinalizePromise;

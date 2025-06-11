@@ -8,7 +8,14 @@ const initialState = {
   description: '',
   memberCnt: 2,
   availableTimes: [],
-  nearestSubwayStation: null,
+  nearestSubwayStation: {
+    address: '',
+    name: '',
+    position: {
+      Ma: 0,
+      La: 0,
+    },
+  },
   selectedPlace: null,
 };
 
@@ -54,12 +61,14 @@ const promiseDataStore = create()(
               case 'location':
                 return InfoState && !!state.availableTimes.length;
               case 'schedule':
-                return InfoState && !!state.availableTimes.length && !!state.nearestSubwayStation;
+                return (
+                  InfoState && !!state.availableTimes.length && !!state.nearestSubwayStation.name
+                );
               default:
                 return false;
             }
           },
-          hasNearestSubwayStationData: () => !!get().nearestSubwayStation,
+          hasNearestSubwayStationData: () => !!get().nearestSubwayStation.name,
 
           // 모든 데이터 초기화
           resetPromiseData: () => set(initialState),
@@ -73,6 +82,7 @@ const promiseDataStore = create()(
           memberCnt: state.memberCnt,
           availableTimes: state.availableTimes,
           nearestSubwayStation: state.nearestSubwayStation,
+          selectedPlace: null,
         }),
       },
     ),

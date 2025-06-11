@@ -15,3 +15,9 @@ export const getPromiseData = async (promiseId, userId) => {
   });
   return data;
 };
+
+// 약속 간략 정보 가져오기 - userId 없을 때
+export const getPromiseSummaryData = async (promiseId) => {
+  const { data } = await axiosInstance.get(`/promises/${promiseId}/summary`);
+  return data;
+};

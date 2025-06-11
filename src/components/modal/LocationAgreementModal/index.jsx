@@ -3,21 +3,23 @@ import PropTypes from 'prop-types';
 import CommonModal from '@/components/modal/CommonModal';
 import * as S from './style';
 import { useLocationActions } from '@/hooks/stores/promise/useLocationStore';
+import useNearestSubwayStation from '@/hooks/kakao/useNearestSubwayStation';
 
 const MY_LOC_MARKER_ID = 'MY_LOCATION_MARKER';
 
-const LocationAgreementModal = ({ isOpen, onClose }) => {
+const LocationAgreementModal = ({ isOpen, onClose, onUse }) => {
   const { setAllowMyLocation, setMyLocation } = useLocationActions();
+  const { setUseMyLocToSearchNearStation } = useNearestSubwayStation();
   const [location, setLocation] = useState('');
   const [error, setError] = useState('');
 
   const handleError = (_err) => {
-    console.log(_err);
     setError('위치 정보를 가져올 수 없습니다.');
     setAllowMyLocation(false);
   };
 
   const handleAgree = () => {
+    setAllowMyLocation(true);
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         async (position) => {
@@ -25,9 +27,11 @@ const LocationAgreementModal = ({ isOpen, onClose }) => {
           const latlng = new window.kakao.maps.LatLng(latitude, longitude);
           // 내 위치 저장 - 마커에서 사용
           setMyLocation({
-            position: { La: latitude, Ma: longitude },
+            position: { Ma: latitude, La: longitude },
             placeId: MY_LOC_MARKER_ID,
           });
+          // 내 위치 기반으로 가까운 역 검색
+          setUseMyLocToSearchNearStation(true);
 
           // 좌표 -> 주소
           const geocoder = new window.kakao.maps.services.Geocoder();
@@ -39,8 +43,8 @@ const LocationAgreementModal = ({ isOpen, onClose }) => {
               setLocation(address); // 주소 문자열 저장
             }
           });
-          setAllowMyLocation(true);
           onClose();
+          onUse?.(); // 위치 정보 가져온 후 슬라이드 닫기
         },
         (error) => handleError(error),
       );
@@ -72,6 +76,7 @@ const LocationAgreementModal = ({ isOpen, onClose }) => {
 LocationAgreementModal.propTypes = {
   isOpen: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
+  onUse: PropTypes.func,
 };
 
 export default LocationAgreementModal;

@@ -6,7 +6,7 @@ const userStore = create()(
   devtools(
     persist(
       immer((set) => ({
-        userId: '',
+        userId: null,
         userName: '',
         fixedSchedules: [],
         promises: {
@@ -59,6 +59,8 @@ const userStore = create()(
         name: 'user-storage', // localStorage에 저장될 키 이름
         partialize: (state) => ({
           userId: state.userId,
+          userName: state.userName,
+          promises: state.promises,
         }),
       },
     ),

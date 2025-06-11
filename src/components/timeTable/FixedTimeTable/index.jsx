@@ -31,7 +31,6 @@ const FixedTimeTable = ({ defaultStart, defaultEnd, onEdit, onDelete }) => {
   let maxTime = defaultMax;
 
   const { fixedSchedules } = useUserInfo();
-  console.log('fixedSchedules in FixedTimeTable', fixedSchedules);
 
   if (fixedSchedules.length > 0) {
     const allStart = fixedSchedules.map((s) => timeToMinutes(s.startTime));
@@ -82,8 +81,6 @@ const FixedTimeTable = ({ defaultStart, defaultEnd, onEdit, onDelete }) => {
       (end.hour === '00' && end.minute === '00' && Number(hour) === 23 && quarter === 3)
     );
   };
-
-  console.log(DAYS);
 
   return (
     <S.TableWrapper>

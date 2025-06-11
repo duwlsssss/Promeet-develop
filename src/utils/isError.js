@@ -3,9 +3,12 @@ import axios from 'axios';
 export const isNetworkError = (error) => {
   if (!error) return;
 
-  const message = error.message ?? '';
+  if (axios.isAxiosError(error)) {
+    return !error.response && error.message === 'Network Error';
+  }
 
-  return error.name === 'TypeError' || message.includes('Network');
+  const message = error.message ?? '';
+  return message === 'Failed to fetch' || message === 'Network request failed';
 };
 
 export const isServerError = (error) => {
@@ -19,5 +22,9 @@ export const isServerError = (error) => {
 
   // 그 외의 일반적인 에러 메시지 검사
   const message = error?.message ?? '';
-  return ['500', '503'].some((code) => message.includes(code));
+  return (
+    ['500', '503'].some((code) => message.includes(code)) ||
+    error.name === 'TypeError' ||
+    message.includes('Network')
+  );
 };

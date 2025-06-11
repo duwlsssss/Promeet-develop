@@ -37,7 +37,9 @@ export default function usePlaceCardHandlers(place, $isRetrieved) {
 
   // 위치 입력 컴포넌트에선 하트 안 보여주기
   const showHeart =
-    pathname !== ROUTES.PROMISE_CREATE_LOCATION && pathname !== ROUTES.PROMISE_LOCATION;
+    pathname !== ROUTES.PROMISE_CREATE_LOCATION &&
+    !pathname.includes('/promise/') &&
+    !pathname.includes('/location');
 
   if (!promiseDataFromServer) {
     return {

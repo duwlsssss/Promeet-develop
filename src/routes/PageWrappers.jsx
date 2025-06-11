@@ -133,7 +133,7 @@ JoinOnlyWrapper.propTypes = {
   children: PropTypes.node.isRequired,
 };
 
-// 약속에 포함된 사람이면 접근 가능
+// 약속에 포함된 사람, 약속 확정 가능이면 접근 가능
 export const PromiseMemberWrapper = ({ children }) => {
   const { userId } = useUserInfo();
   const navigate = useNavigate();
@@ -143,9 +143,11 @@ export const PromiseMemberWrapper = ({ children }) => {
 
   useEffect(() => {
     if (!isPending && promiseDataFromServer) {
-      // 약속 멤버 체크 - 여기서 제출 체크도 됨
+      // 약속 멤버 체크
       const isMember = promiseDataFromServer.members.some((member) => member.userId === userId);
-      if (!isMember) {
+
+      // 멤버가 아니거나 확정 불가능한 경우 홈으로 이동
+      if (!isMember || !promiseDataFromServer.canFix) {
         navigate(ROUTES.HOME);
       }
     }
@@ -182,7 +184,6 @@ export const PromiseCreateWrapper = ({ children }) => {
     // 이전 단계 데이터 체크
     const step = pathname.split('/').pop(); // 'date', 'location', 'schedule'
     const hasRequiredData = hasDataUntil(step);
-    console.log(step, '이전 단계 데이터', hasDataUntil(step));
 
     if (!hasRequiredData) {
       // 이전 단계로 리다이렉트
@@ -190,7 +191,6 @@ export const PromiseCreateWrapper = ({ children }) => {
       const currentStepIndex = steps.indexOf(step);
       const prevStep = steps[currentStepIndex - 1] ?? 'info';
 
-      console.log(prevStep);
       navigate(BUILD_ROUTES.PROMISE_CREATE(prevStep));
     }
   }, [pathname, hasDataUntil, navigate]);

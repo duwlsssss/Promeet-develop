@@ -36,7 +36,6 @@ const EditScheduleModal = ({ isOpen, schedule, onClose, onUpdate }) => {
 
   useEffect(() => {
     if (schedule) {
-      console.log('console.log(schedule);', schedule);
       setForm({
         title: schedule.title ?? '',
         day: schedule.day ?? 'Monday',

@@ -5,9 +5,8 @@ import { CATEGORY } from '@/constants/place';
 
 // 최종 약속 위치 표시하는 맵
 const FinalPlaceMap = ({ place }) => {
-  console.log('place in FPM', place);
   return (
-    <MapContainer lat={place.position.Ma} lng={place.position.La}>
+    <MapContainer lat={Number(place.position.Ma)} lng={Number(place.position.La)}>
       <MarkerManager markers={[place]} />
     </MapContainer>
   );
@@ -26,6 +25,11 @@ FinalPlaceMap.propTypes = {
     address: PropTypes.string,
     link: PropTypes.string,
   }).isRequired,
+  isSummaryPage: PropTypes.bool,
+};
+
+FinalPlaceMap.defaultProps = {
+  isSummaryPage: false,
 };
 
 export default FinalPlaceMap;

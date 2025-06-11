@@ -9,4 +9,4 @@ export const DEFAULT_SUBWAY_STATION = '숭실대입구역';
 export const NAME_MAX_LENGTH = 20;
 export const DESCRIPTION_MAX_LENGTH = 20;
 export const MEMBER_CNT_MIN = 2;
-export const MEMBER_CNT_MAX = 10;
+export const MEMBER_CNT_MAX = 20;
