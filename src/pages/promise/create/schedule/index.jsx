@@ -136,6 +136,13 @@ const SchedulePage = () => {
     }
   };
 
+  // "가능 시간 입력 여부" 체크 함수 추가
+  const hasSelectedTime = () => {
+    return availableTimes.some(
+      (item) => Array.isArray(item.timeRanges) && item.timeRanges.length > 0,
+    );
+  };
+
   return (
     <>
       {isGetUserDataPending ? (
@@ -157,7 +164,10 @@ const SchedulePage = () => {
               </S.TableInnerWrapper>
             </S.TableScrollWrapper>
             <S.BtnWrapper>
-              <Button onClick={handleCreatePromiseBtnClick} disabled={isCreatePromisePending}>
+              <Button
+                onClick={handleCreatePromiseBtnClick}
+                disabled={isCreatePromisePending || !hasSelectedTime()}
+              >
                 {isCreatePromisePending ? '약속 생성 중...' : '약속 생성'}
               </Button>
             </S.BtnWrapper>

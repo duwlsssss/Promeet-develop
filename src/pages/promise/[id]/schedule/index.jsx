@@ -51,12 +51,27 @@ const JoinSchedulePage = () => {
   };
 
   const handleJoinPromiseBtnClick = async () => {
-    // 날짜별로 여러 구간을 각각 객체로 변환
-    const newAvailableTimes = [];
-    availableTimes.forEach((item) => {
-      if (!item.timeRanges || item.timeRanges.length === 0) return;
+    const newAvailableTimes = availableTimes
+      .map((item, dayIdx) => {
+        const dayArr = Array.from({ length: 24 }, (_, h) =>
+          Array.from({ length: 4 }, (_, q) => selectedRef.current[h][dayIdx][q]),
+        );
+        const ranges = extractTimeRanges(dayArr);
+        return {
+          ...item,
+          timeRanges: ranges.map((r) => ({
+            startTime: r.start,
+            endTime: r.end,
+          })),
+        };
+      })
+      .filter((item) => item.timeRanges.length > 0);
+
+    // 날짜별 여러 구간을 각각 객체로 변환
+    const flatAvailableTimes = [];
+    newAvailableTimes.forEach((item) => {
       item.timeRanges.forEach((range) => {
-        newAvailableTimes.push({
+        flatAvailableTimes.push({
           id: uuidv4(),
           date: item.date,
           day: item.day,
@@ -66,15 +81,15 @@ const JoinSchedulePage = () => {
       });
     });
 
-    console.log('newAvailableTimes', newAvailableTimes);
+    console.log('flatAvailableTimes', flatAvailableTimes);
 
+    // 서버로 전송
     joinPromise({
       promiseId,
       nearestStation: nearestSubwayStation,
-      availableTimes: newAvailableTimes,
+      availableTimes: flatAvailableTimes,
     });
 
-    // 제출용으로 저장했던 데이터 삭제
     resetPromiseData();
   };
 
