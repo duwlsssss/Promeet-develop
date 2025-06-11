@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import * as S from './style';
 
 const HOURS = Array.from({ length: 24 }, (_, i) => String(i).padStart(2, '0'));
@@ -23,6 +23,11 @@ const TimeSelectModal = ({
   const [selectedHour, setSelectedHour] = useState(initialHour);
   const [selectedMinute, setSelectedMinute] = useState(initialMinute);
 
+  // 스로틀용 ref
+  const lastHourWheelTime = useRef(0);
+  const lastMinuteWheelTime = useRef(0);
+  const throttleMs = 70; // 70ms마다 한 번만 반응
+
   // 모달이 열릴 때마다 초기값 동기화
   useEffect(() => {
     if (isOpen) {
@@ -36,6 +41,10 @@ const TimeSelectModal = ({
   };
 
   const handleHourWheel = (e) => {
+    const now = Date.now();
+    if (now - lastHourWheelTime.current < throttleMs) return;
+    lastHourWheelTime.current = now;
+
     if (e.deltaY < 0) {
       setSelectedHour(getPrevNext(HOURS, selectedHour).prev);
     } else if (e.deltaY > 0) {
@@ -45,6 +54,10 @@ const TimeSelectModal = ({
 
   const handleMinuteWheel = (e) => {
     e.preventDefault();
+    const now = Date.now();
+    if (now - lastMinuteWheelTime.current < throttleMs) return;
+    lastMinuteWheelTime.current = now;
+
     const currentIdx = MINUTES.indexOf(selectedMinute);
     if (e.deltaY < 0) {
       if (currentIdx === 0) {
