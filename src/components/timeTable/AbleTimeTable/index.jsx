@@ -82,7 +82,12 @@ const AbleTimeTable = ({ days, onChange, fixedSchedules = [] }) => {
         </S.HeaderCell>
         {days.map((item) => {
           const dateObj = new Date(item.date);
-          const dayEng = Object.keys(DAYS)[dateObj.getDay()];
+          // JS: 0=일, 1=월, ..., 6=토
+          // DAYS: 월~일 순서라면, 아래처럼 변환
+          // 월요일부터 시작하는 DAYS라면:
+          const jsDay = dateObj.getDay(); // 0~6 (일~토)
+          // 월요일=0, ..., 일요일=6으로 맞추기
+          const dayEng = Object.keys(DAYS)[(jsDay + 6) % 7];
           const dateStr = `${String(dateObj.getMonth() + 1).padStart(2, '0')}.${String(
             dateObj.getDate(),
           ).padStart(2, '0')}`;

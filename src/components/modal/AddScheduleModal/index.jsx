@@ -9,8 +9,9 @@ import crossIcon from '@/assets/img/icon/cross.svg';
 import { DAYS } from '@/constants/calender';
 import * as S from './style';
 
-const defaultSchedule = () => ({
-  id: uuidv4(),
+const defaultSchedule = (title = '') => ({
+  id: title ? `${title}-${uuidv4().slice(0, 8)}` : uuidv4(),
+  title, // title 필드도 같이 저장
   day: 'Monday',
   startTime: { hour: '09', minute: '00' },
   endTime: { hour: '18', minute: '00' },
@@ -106,7 +107,11 @@ const AddScheduleModal = ({ isOpen, onClose, onAdd }) => {
 
   // 개별 목록 추가
   const handleAddSchedule = () => {
-    setSchedules((prev) => [...prev, defaultSchedule()]);
+    setSchedules((prev) => [
+      ...prev,
+      defaultSchedule(title), // title을 id에 포함
+    ]);
+    setTitle(''); // 입력창 초기화
   };
   // 개별 목록 삭제
   const handleDeleteSchedule = (idx) => {
@@ -135,6 +140,7 @@ const AddScheduleModal = ({ isOpen, onClose, onAdd }) => {
 
     const fixedSchedules = schedules.map((s) => ({
       id: s.id,
+      title: s.title, // title도 같이 보냄
       date: dayToDate[s.day] ?? getDateStr(0),
       day: s.day,
       startTime: `${s.startTime.hour}:${s.startTime.minute}`,
@@ -165,7 +171,10 @@ const AddScheduleModal = ({ isOpen, onClose, onAdd }) => {
           <div>
             <S.ScheduleInput
               value={title}
-              onChange={(e) => setTitle(e.target.value)}
+              onChange={(e) => {
+                setTitle(e.target.value);
+                setSchedules((prev) => prev.map((item) => ({ ...item, title: e.target.value })));
+              }}
               placeholder="일정명"
             />
             <S.Divider />
